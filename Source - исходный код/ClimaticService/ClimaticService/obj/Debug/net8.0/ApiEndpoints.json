@@ -1,0 +1,32 @@
+[
+  {
+    "ContainingType": "ClimaticService.Controllers.TestController",
+    "Method": "CheckConnection",
+    "RelativePath": "api/Test/check",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClimaticService.Controllers.TestController",
+    "Method": "GetRequests",
+    "RelativePath": "api/Test/requests",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClimaticService.Controllers.TestController",
+    "Method": "GetUsers",
+    "RelativePath": "api/Test/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ClimaticService",
+    "\\ClimaticService\\Controllers",
+    "\\ClimaticService\\Data",
+    "\\ClimaticService\\Models"
+  ],
+  "SelectedNode": "\\ClimaticService\\Program.cs",
+  "PreviewInSolutionExplorer": false
+}
