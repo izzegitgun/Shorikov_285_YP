@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaticService - Тест данных</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .status-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-led {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: gray;
+        }
+        
+        .status-led.connected {
+            background: #4caf50;
+            box-shadow: 0 0 10px #4caf50;
+        }
+        
+        .status-led.disconnected {
+            background: #f44336;
+            box-shadow: 0 0 10px #f44336;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+        
+        .refresh-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            border: none;
+            font-size: 1em;
+        }
+        
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .data-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            display: inline-block;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c62828;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌡️ ClimaticService - Данные из БД</h1>
+        
+        <div class="status-bar">
+            <div class="connection-status">
+                <span>Статус подключения:</span>
+                <span class="status-led" id="connectionLed"></span>
+                <span id="connectionText">Проверка...</span>
+            </div>
+            <button class="refresh-btn" onclick="loadAllData()">🔄 Обновить данные</button>
+        </div>
+        
+        <div class="stats" id="stats"></div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('users')">👥 Пользователи</button>
+            <button class="tab" onclick="showTab('requests')">📋 Заявки</button>
+            <button class="tab" onclick="showTab('types')">🔧 Типы оборудования</button>
+            <button class="tab" onclick="showTab('statuses')">📊 Статусы</button>
+            <button class="tab" onclick="showTab('comments')">💬 Комментарии</button>
+        </div>
+        
+        <div id="errorContainer" class="error-message" style="display: none;"></div>
+        
+        <div class="data-card" id="dataContainer">
+            <div class="loading">Загрузка данных...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://localhost:7233/api';
+        let currentTab = 'users';
+        
+        // Проверка подключения при загрузке
+        window.onload = function() {
+            checkConnection();
+            loadAllData();
+        };
+        
+        // Проверка соединения с API
+        async function checkConnection() {
+            const led = document.getElementById('connectionLed');
+            const text = document.getElementById('connectionText');
+            
+            try {
+                const response = await fetch(`${API_BASE}/Test/check`);
+                const data = await response.json();
+                
+                if (data.connected) {
+                    led.className = 'status-led connected';
+                    text.textContent = 'Подключено к БД';
+                } else {
+                    led.className = 'status-led disconnected';
+                    text.textContent = 'Ошибка подключения к БД';
+                }
+            } catch (error) {
+                led.className = 'status-led disconnected';
+                text.textContent = 'API не доступен';
+                console.error('Connection error:', error);
+            }
+        }
+        
+        // Загрузка всех данных
+        async function loadAllData() {
+            showError(null); // Скрываем ошибки
+            document.getElementById('dataContainer').innerHTML = '<div class="loading">Загрузка данных...</div>';
+            
+            try {
+                await Promise.all([
+                    loadUsers(),
+                    loadRequests(),
+                    loadTypes(),
+                    loadStatuses(),
+                    loadComments()
+                ]);
+                
+                // После загрузки всех данных показываем текущую вкладку
+                showTab(currentTab);
+                updateStats();
+            } catch (error) {
+                showError('Ошибка загрузки данных: ' + error.message);
+                console.error('Load error:', error);
+            }
+        }
+        
+        // Загрузка пользователей
+        async function loadUsers() {
+            const response = await fetch(`${API_BASE}/Test/users`);
+            const users = await response.json();
+            window.cachedUsers = users;
+            return users;
+        }
+        
+        // Загрузка заявок
+        async function loadRequests() {
+            const response = await fetch(`${API_BASE}/Test/requests`);
+            const requests = await response.json();
+            window.cachedRequests = requests;
+            return requests;
+        }
+        
+        // Загрузка типов оборудования
+        async function loadTypes() {
+            // Так как у нас нет отдельного эндпоинта для типов, извлекаем из заявок
+            const response = await fetch(`${API_BASE}/Test/requests`);
+            const requests = await response.json();
+            const types = {};
+            requests.forEach(req => {
+                if (req.equipmentType) {
+                    types[req.equipmentType.typeId] = req.equipmentType;
+                }
+            });
+            window.cachedTypes = Object.values(types);
+            return window.cachedTypes;
+        }
+        
+        // Загрузка статусов
+        async function loadStatuses() {
+            // Извлекаем из заявок
+            const response = await fetch(`${API_BASE}/Test/requests`);
+            const requests = await response.json();
+            const statuses = {};
+            requests.forEach(req => {
+                if (req.status) {
+                    statuses[req.status.statusId] = req.status;
+                }
+            });
+            window.cachedStatuses = Object.values(statuses);
+            return window.cachedStatuses;
+        }
+        
+        // Загрузка комментариев
+        async function loadComments() {
+            // Комментарии пока отдельно не грузим
+            window.cachedComments = [];
+            return [];
+        }
+        
+        // Показать вкладку
+        function showTab(tabName) {
+            currentTab = tabName;
+            
+            // Обновляем активный таб
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Показываем данные
+            let html = '';
+            switch(tabName) {
+                case 'users':
+                    html = renderUsers();
+                    break;
+                case 'requests':
+                    html = renderRequests();
+                    break;
+                case 'types':
+                    html = renderTypes();
+                    break;
+                case 'statuses':
+                    html = renderStatuses();
+                    break;
+                case 'comments':
+                    html = renderComments();
+                    break;
+            }
+            
+            document.getElementById('dataContainer').innerHTML = html;
+        }
+        
+        // Рендер пользователей
+        function renderUsers() {
+            const users = window.cachedUsers || [];
+            
+            if (users.length === 0) {
+                return '<p>Нет данных о пользователях</p>';
+            }
+            
+            let html = '<table><tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Логин</th><th>Тип</th><th>Статус</th></tr>';
+            
+            users.forEach(user => {
+                html += `<tr>
+                    <td>${user.userId}</td>
+                    <td>${user.fio}</td>
+                    <td>${user.phone}</td>
+                    <td>${user.login}</td>
+                    <td><span class="badge">${user.type}</span></td>
+                    <td>${user.isDeleted ? '❌ Удален' : '✅ Активен'}</td>
+                </tr>`;
+            });
+            
+            html += '</table>';
+            return html;
+        }
+        
+        // Рендер заявок
+        function renderRequests() {
+            const requests = window.cachedRequests || [];
+            
+            if (requests.length === 0) {
+                return '<p>Нет данных о заявках</p>';
+            }
+            
+            let html = '<table><tr><th>ID</th><th>Дата</th><th>Тип</th><th>Модель</th><th>Проблема</th><th>Статус</th><th>Клиент</th><th>Мастер</th></tr>';
+            
+            requests.forEach(req => {
+                html += `<tr>
+                    <td>${req.requestId}</td>
+                    <td>${new Date(req.startDate).toLocaleDateString()}</td>
+                    <td>${req.equipmentType?.typeName || 'Не указан'}</td>
+                    <td>${req.model}</td>
+                    <td>${req.problemDescription.substring(0, 30)}${req.problemDescription.length > 30 ? '...' : ''}</td>
+                    <td><span class="badge">${req.status?.statusName || 'Не указан'}</span></td>
+                    <td>${req.client?.fio || 'Не указан'}</td>
+                    <td>${req.master?.fio || 'Не назначен'}</td>
+                </tr>`;
+            });
+            
+            html += '</table>';
+            return html;
+        }
+        
+        // Рендер типов оборудования
+        function renderTypes() {
+            const types = window.cachedTypes || [];
+            
+            if (types.length === 0) {
+                return '<p>Нет данных о типах оборудования</p>';
+            }
+            
+            let html = '<table><tr><th>ID</th><th>Название</th><th>Описание</th></tr>';
+            
+            types.forEach(type => {
+                html += `<tr>
+                    <td>${type.typeId}</td>
+                    <td>${type.typeName}</td>
+                    <td>${type.typeDescription || '-'}</td>
+                </tr>`;
+            });
+            
+            html += '</table>';
+            return html;
+        }
+        
+        // Рендер статусов
+        function renderStatuses() {
+            const statuses = window.cachedStatuses || [];
+            
+            if (statuses.length === 0) {
+                return '<p>Нет данных о статусах</p>';
+            }
+            
+            let html = '<table><tr><th>ID</th><th>Название</th><th>Описание</th></tr>';
+            
+            statuses.forEach(status => {
+                html += `<tr>
+                    <td>${status.statusId}</td>
+                    <td>${status.statusName}</td>
+                    <td>${status.statusDescription || '-'}</td>
+                </tr>`;
+            });
+            
+            html += '</table>';
+            return html;
+        }
+        
+        // Рендер комментариев
+        function renderComments() {
+            return '<p>Комментарии будут доступны после добавления API</p>';
+        }
+        
+        // Обновление статистики
+        function updateStats() {
+            const users = window.cachedUsers || [];
+            const requests = window.cachedRequests || [];
+            
+            const activeUsers = users.filter(u => !u.isDeleted).length;
+            const newRequests = requests.filter(r => r.status?.statusName === 'Новая заявка').length;
+            const inProgress = requests.filter(r => r.status?.statusName === 'В процессе ремонта').length;
+            const completed = requests.filter(r => r.status?.statusName === 'Завершена').length;
+            
+            const statsHtml = `
+                <div class="stat-item">
+                    <div class="stat-value">${users.length}</div>
+                    <div class="stat-label">Всего пользователей</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${activeUsers}</div>
+                    <div class="stat-label">Активных</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${requests.length}</div>
+                    <div class="stat-label">Всего заявок</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${newRequests}</div>
+                    <div class="stat-label">Новых заявок</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${inProgress}</div>
+                    <div class="stat-label">В работе</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${completed}</div>
+                    <div class="stat-label">Завершено</div>
+                </div>
+            `;
+            
+            document.getElementById('stats').innerHTML = statsHtml;
+        }
+        
+        // Показать ошибку
+        function showError(message) {
+            const errorDiv = document.getElementById('errorContainer');
+            if (message) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
