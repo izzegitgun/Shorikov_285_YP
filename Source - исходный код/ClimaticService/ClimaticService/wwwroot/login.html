@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — ClimaticService</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-card">
+        <div class="card slide-up">
+            <div class="auth-logo">
+                <div class="icon"></div>
+                <h2>ClimaticService</h2>
+                <p>Система управления сервисным центром</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Логин</label>
+                    <input type="text" class="form-control" id="login" placeholder="Введите логин" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" placeholder="Введите пароль" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Войти</button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="mb-2" style="font-size: 0.8125rem;">Тестовые аккаунты</p>
+                <div class="demo-buttons">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="fillLogin('manager','manager')">Менеджер</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="fillLogin('master','master')">Специалист</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="fillLogin('client','client')">Заказчик</button>
+                </div>
+
+                <div class="register-section">
+                    <p class="mb-2" style="font-size: 0.8125rem; margin-top: 1rem;">Нет аккаунта?</p>
+                    <button type="button" class="btn btn-outline-primary w-full" onclick="window.location.href='/register.html'">
+                        Зарегистрироваться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        function fillLogin(login, password) {
+            document.getElementById('login').value = login;
+            document.getElementById('password').value = password;
+            document.getElementById('loginForm').requestSubmit();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+
+            const result = await Auth.login(
+                document.getElementById('login').value,
+                document.getElementById('password').value
+            );
+
+            if (result.success) {
+                NotificationManager.success('Вход выполнен');
+                setTimeout(() => window.location.href = '/pages/menu.html', 800);
+            } else {
+                NotificationManager.error(result.error);
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
