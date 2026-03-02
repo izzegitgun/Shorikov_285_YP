@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявки — ClimaticService</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/pages/menu.html" class="logo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <div class="user-menu">
+            <span class="user-name" id="userName">…</span>
+            <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Выйти</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="flex justify-between items-center mb-3">
+            <h1>Заявки</h1>
+            <a href="/pages/create-request.html" class="btn btn-primary">+ Новая заявка</a>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Поиск</label>
+                <input type="text" class="form-control" id="searchInput" placeholder="номер, клиент, модель…">
+            </div>
+            <div class="filter-group">
+                <label>Статус</label>
+                <select class="form-control" id="statusFilter">
+                    <option value="">все статусы</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Тип</label>
+                <select class="form-control" id="typeFilter">
+                    <option value="">все типы</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Период</label>
+                <select class="form-control" id="periodFilter">
+                    <option value="">все время</option>
+                    <option value="week">неделя</option>
+                    <option value="month">месяц</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Дата</th>
+                        <th>Тип</th>
+                        <th>Модель</th>
+                        <th>Клиент</th>
+                        <th>Статус</th>
+                        <th>Мастер</th>
+                        <th>Дней</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="requestsBody">
+                    <tr><td colspan="9" class="loading">Загрузка…</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script>
+        class RequestsPage {
+            constructor() {
+                this.requests = [];
+                this.filteredRequests = [];
+                this.currentPage = 1;
+                this.itemsPerPage = 20;
+                this.statuses = [];
+                this.types = [];
+                this.searchTimeout = null;
+                this.init();
+            }
+
+            async init() {
+                document.getElementById('userName').textContent = Auth.getCurrentUser()?.fio?.split(' ')[0] || '…';
+                await this.loadFilters();
+                await this.loadRequests();
+                this.setupEventListeners();
+            }
+
+            async loadFilters() {
+                try {
+                    this.statuses = await RequestsAPI.getStatuses();
+                    this.types = await RequestsAPI.getTypes();
+                    const statusSelect = document.getElementById('statusFilter');
+                    this.statuses.forEach(s => { statusSelect.innerHTML += `<option value="${s.statusId}">${s.statusName}</option>`; });
+                    const typeSelect = document.getElementById('typeFilter');
+                    this.types.forEach(t => { typeSelect.innerHTML += `<option value="${t.typeId}">${t.typeName}</option>`; });
+                } catch (e) { NotificationManager.error('Ошибка загрузки фильтров'); }
+            }
+
+            async loadRequests() {
+                try {
+                    this.requests = await RequestsAPI.getAll();
+                    this.filteredRequests = [...this.requests];
+                    this.renderTable();
+                } catch (e) {
+                    document.getElementById('requestsBody').innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:2.5rem;">Ошибка загрузки</td></tr>';
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('searchInput').addEventListener('input', () => {
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => this.applyFilters(), 400);
+                });
+                ['statusFilter','typeFilter','periodFilter'].forEach(id => document.getElementById(id).addEventListener('change', () => this.applyFilters()));
+            }
+
+            applyFilters() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const statusId = document.getElementById('statusFilter').value;
+                const typeId = document.getElementById('typeFilter').value;
+                const period = document.getElementById('periodFilter').value;
+
+                this.filteredRequests = this.requests.filter(req => {
+                    if (searchTerm && !req.requestId.toString().includes(searchTerm) && !(req.client?.fio || '').toLowerCase().includes(searchTerm) && !req.model.toLowerCase().includes(searchTerm)) return false;
+                    if (statusId && req.statusId.toString() !== statusId) return false;
+                    if (typeId && req.typeId.toString() !== typeId) return false;
+                    if (period) {
+                        const diff = (new Date() - new Date(req.startDate)) / (1000*60*60*24);
+                        if (period === 'week' && diff > 7) return false;
+                        if (period === 'month' && diff > 30) return false;
+                    }
+                    return true;
+                });
+                this.currentPage = 1;
+                this.renderTable();
+            }
+
+            renderTable() {
+                const start = (this.currentPage - 1) * this.itemsPerPage;
+                const pageData = this.filteredRequests.slice(start, start + this.itemsPerPage);
+
+                if (pageData.length === 0) {
+                    document.getElementById('requestsBody').innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:2.5rem;">Заявки не найдены</td></tr>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                const showDelete = typeof Auth !== 'undefined' && Auth.isManager();
+                document.getElementById('requestsBody').innerHTML = pageData.map(req => RequestRenderer.renderTableRow(req, { actions: true, showDelete })).join('');
+                this.renderPagination();
+            }
+
+            renderPagination() {
+                const totalPages = Math.ceil(this.filteredRequests.length / this.itemsPerPage);
+                if (totalPages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
+                let html = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button class="page-btn ${i === this.currentPage ? 'active' : ''}" onclick="window.requestsPage.goToPage(${i})">${i}</button>`;
+                }
+                document.getElementById('pagination').innerHTML = html;
+            }
+
+            goToPage(page) { this.currentPage = page; this.renderTable(); }
+        }
+
+        window.deleteRequestConfirm = async function(id, btn) {
+            if (!confirm('Удалить заявку #' + id + '? Это действие нельзя отменить.')) return;
+            btn.disabled = true;
+            try {
+                await RequestsAPI.delete(id);
+                NotificationManager.success('Заявка удалена');
+                window.requestsPage.loadRequests();
+            } catch (e) { NotificationManager.error(e.message); }
+            btn.disabled = false;
+        };
+
+        document.addEventListener('DOMContentLoaded', () => { window.requestsPage = new RequestsPage(); });
+    </script>
+</body>
+</html>

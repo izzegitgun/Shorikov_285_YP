@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная — ClimaticService</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/pages/menu.html" class="logo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <div class="user-menu">
+            <div class="user-info">
+                <span class="user-name" id="userName">…</span>
+                <span class="user-badge" id="userType"></span>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="logoutBtn">Выйти</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div id="managerStats" style="display: none;">
+            <div class="stats-grid" id="statsContainer"></div>
+        </div>
+
+        <div id="clientInfo" class="card mb-4 slide-up" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <div style="font-size: 3rem;">🌡️</div>
+                <div>
+                    <h2 style="margin-bottom: 0.5rem;">Добро пожаловать в ClimaticService!</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Мы профессионально занимаемся ремонтом климатической техники с 2010 года.</p>
+                    <p style="color: var(--text-muted);">✓ Бесплатная диагностика ✓ Гарантия на работы ✓ Опытные мастера</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4 slide-up">
+            <h2 id="welcomeMessage" class="mb-1">Добро пожаловать</h2>
+            <p style="color: var(--text-muted); margin: 0;">Выберите нужный раздел для работы</p>
+        </div>
+
+        <div class="menu-grid" id="menuContainer"></div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        class MenuPage {
+            static async init() {
+                this.user = Auth.getCurrentUser();
+                if (!this.user) return;
+
+                this.renderUserInfo();
+
+                if (this.user.type === 'Менеджер' || this.user.type === 'Менеджер по качеству') {
+                    document.getElementById('managerStats').style.display = 'block';
+                    await this.loadStatistics();
+                } else if (this.user.type === 'Заказчик') {
+                    document.getElementById('clientInfo').style.display = 'block';
+                }
+
+                this.renderMenu();
+            }
+
+            static renderUserInfo() {
+                document.getElementById('userName').textContent = this.user.fio.split(' ')[0];
+                document.getElementById('userType').textContent = this.user.type;
+                document.getElementById('welcomeMessage').textContent = 'Добро пожаловать, ' + this.user.fio.split(' ')[0];
+
+                document.getElementById('logoutBtn').onclick = () => Auth.logout();
+            }
+
+            static async loadStatistics() {
+                try {
+                    const stats = await RequestsAPI.getStatistics();
+                    document.getElementById('statsContainer').innerHTML = [
+                        { icon: '📋', value: stats.totalRequests || 0, label: 'всего заявок' },
+                        { icon: '🆕', value: stats.newRequests || 0, label: 'новых' },
+                        { icon: '⚙️', value: stats.inProgressRequests || 0, label: 'в работе' },
+                        { icon: '✅', value: stats.completedRequests || 0, label: 'завершено' }
+                    ].map(item => `
+                            <div class="stat-card" onclick="window.location.href='/pages/statistics.html'">
+                                <div class="stat-icon">${item.icon}</div>
+                                <div class="stat-value">${item.value}</div>
+                                <div class="stat-label">${item.label}</div>
+                            </div>
+                        `).join('');
+                } catch (e) { console.error(e); }
+            }
+
+            static renderMenu() {
+                let menuItems = [];
+
+                switch (this.user.type) {
+                    case 'Заказчик':
+                        menuItems = [
+                            { icon: '📝', title: 'Мои заявки', description: 'Просмотр статуса ваших заявок', link: '/pages/my-requests.html' },
+                            { icon: '✎', title: 'Новая заявка', description: 'Создать заявку на ремонт', link: '/pages/create-request.html' },
+                            { icon: 'ℹ️', title: 'О сервисе', description: 'Информация о нашей компании', link: '#', action: 'showAbout' }
+                        ];
+                        break;
+
+                    case 'Специалист':
+                        menuItems = [
+                            { icon: '🔧', title: 'Мои задания', description: 'Заявки, назначенные вам', link: '/pages/my-tasks.html' },
+                            { icon: '📋', title: 'Все заявки', description: 'Просмотр всех заявок', link: '/pages/requests.html' },
+                            { icon: '👥', title: 'Пользователи', description: 'Список пользователей системы', link: '/pages/users.html' }
+                        ];
+                        break;
+
+                    case 'Менеджер':
+                    case 'Менеджер по качеству':
+                        menuItems = [
+                            { icon: '📋', title: 'Все заявки', description: 'Управление всеми заявками', link: '/pages/requests.html' },
+                            { icon: '📊', title: 'Статистика', description: 'Аналитика и графики', link: '/pages/statistics.html' },
+                            { icon: '👥', title: 'Пользователи', description: 'Управление пользователями', link: '/pages/users.html' },
+                            { icon: '📝', title: 'Мои заявки', description: 'Заявки, где вы участвуете', link: '/pages/my-requests.html' }
+                        ];
+                        break;
+                }
+
+                document.getElementById('menuContainer').innerHTML = menuItems.map(item => `
+                        <div class="menu-card" onclick="${item.action ? `${item.action}()` : `window.location.href='${item.link}'`}">
+                            <div class="menu-icon">${item.icon}</div>
+                            <h3 class="menu-title">${item.title}</h3>
+                            <p class="menu-description">${item.description}</p>
+                        </div>
+                    `).join('');
+            }
+
+            static showAbout() {
+                NotificationManager.info(
+                    'ClimaticService - сервисный центр по ремонту климатической техники\n' +
+                    '☎️ Телефон: +7 (999) 123-45-67\n' +
+                    '📍 Адрес: г. Екатеринбург, ул. Ленина, д. 123\n' +
+                    '⏰ Режим работы: Пн-Пт 9:00-20:00, Сб 10:00-18:00'
+                );
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => MenuPage.init());
+        window.showAbout = () => MenuPage.showAbout();
+    </script>
+</body>
+</html>
