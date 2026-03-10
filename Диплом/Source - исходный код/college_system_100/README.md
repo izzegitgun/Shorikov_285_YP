@@ -13,6 +13,6 @@
 - `college_system/scripts/sql/` — SQL-скрипты
 - `college_system/docs/diagrams/` — диаграммы/документация
 
-Инструкции запуска — в `college_system/README.md`.
+Инструкции запуска — в `college_system/console_manager.py`.
 
 
