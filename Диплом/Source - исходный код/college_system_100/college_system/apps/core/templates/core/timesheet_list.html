@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Табели{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
+    <div>
+        <p class="text-muted small mb-1">Учёт нагрузки</p>
+        <h2 class="mb-0 fw-semibold">
+            <i class="bi bi-calendar3 me-2 text-primary"></i>Табели
+        </h2>
+    </div>
+    {% if user.is_superuser or user.role == "curator" or user.role == "admin" or user.role == "accountant" %}
+    <a href="{% url 'core:timesheet_create' %}" class="btn btn-primary btn-sm btn-soft">
+        <i class="bi bi-plus-lg me-1"></i>Добавить
+    </a>
+    {% endif %}
+</div>
+
+<div class="card shadow-soft border-0 glass-surface fade-in-up" data-delay="100">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+                <i class="bi bi-table me-2"></i>Просмотр табелей
+            </h5>
+            <button type="button" class="btn btn-outline-primary btn-sm btn-soft" onclick="toggleTableView()">
+                <i class="bi bi-eye me-1"></i>Просмотр
+            </button>
+        </div>
+        
+        <div id="timesheet-table" class="table-responsive" style="display: none;">
+            <table class="table align-middle mb-0 table-modern table-elevated">
+                <thead class="table-light table-header-sticky">
+                <tr>
+                    <th>Преподаватель</th>
+                    <th>Дисциплина</th>
+                    <th>Группа</th>
+                    <th>Период с</th>
+                    <th>Период до</th>
+                    <th class="text-center text-info">
+                        <i class="bi bi-book me-1"></i>Лекции
+                    </th>
+                    <th class="text-center text-success">
+                        <i class="bi bi-pencil-square me-1"></i>Практика
+                    </th>
+                    <th class="text-center text-warning">
+                        <i class="bi bi-flask me-1"></i>Лабы
+                    </th>
+                    <th class="text-center fw-bold text-primary">
+                        <i class="bi bi-calculator me-1"></i>Итого
+                    </th>
+                    <th>Статус</th>
+                    <th class="text-end">Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for t in object_list %}
+                    <tr>
+                        <td>{{ t.teacher.full_name }}</td>
+                        <td>{% if t.subject %}{{ t.subject.name }}{% else %}—{% endif %}</td>
+                        <td>{% if t.group %}{{ t.group.name }}{% else %}—{% endif %}</td>
+                        <td>{% if t.period_from %}{{ t.period_from|date:"d.m.Y" }}{% else %}—{% endif %}</td>
+                        <td>{% if t.period_to %}{{ t.period_to|date:"d.m.Y" }}{% else %}—{% endif %}</td>
+                    <td class="text-center text-info fw-semibold">{{ t.lecture_hours|default:"0.00" }}</td>
+                    <td class="text-center text-success fw-semibold">{{ t.practice_hours|default:"0.00" }}</td>
+                    <td class="text-center text-warning fw-semibold">{{ t.lab_hours|default:"0.00" }}</td>
+                    <td class="text-center fw-bold text-primary">{{ t.total_hours|default:"0.00" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if t.status == 'draft' %}bg-secondary
+                                {% elif t.status == 'approved' %}bg-success
+                                {% elif t.status == 'paid' %}bg-primary
+                                {% endif %}">
+                                {{ t.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'core:timesheet_pdf' t.pk %}" class="btn btn-outline-secondary btn-sm btn-soft" title="PDF">
+                                <i class="bi bi-filetype-pdf"></i>
+                            </a>
+                            {% if user.is_superuser or user.role == "curator" or user.role == "admin" or user.role == "accountant" %}
+                            <a href="{% url 'core:timesheet_edit' t.pk %}" class="btn btn-outline-primary btn-sm btn-soft" title="Редактировать">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="{% url 'core:timesheet_delete' t.pk %}" class="btn btn-outline-danger btn-sm btn-soft" title="Удалить">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox me-2"></i>Нет данных
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot class="table-light fw-bold">
+                <tr>
+                    <td colspan="5" class="text-end">Всего:</td>
+                    <td class="text-center text-info">{{ total_lecture|floatformat:2 }}</td>
+                    <td class="text-center text-success">{{ total_practice|floatformat:2 }}</td>
+                    <td class="text-center text-warning">{{ total_lab|floatformat:2 }}</td>
+                    <td class="text-center text-primary">{{ total_hours|floatformat:2 }}</td>
+                    <td colspan="2"></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div id="timesheet-summary" class="text-center text-muted py-4">
+            <i class="bi bi-info-circle me-2"></i>
+            Нажмите кнопку "Просмотр" для отображения таблицы
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleTableView() {
+    const table = document.getElementById('timesheet-table');
+    const summary = document.getElementById('timesheet-summary');
+    
+    if (table.style.display === 'none') {
+        table.style.display = 'block';
+        summary.style.display = 'none';
+    } else {
+        table.style.display = 'none';
+        summary.style.display = 'block';
+    }
+}
+
+// Автоматически показываем таблицу, если есть данные
+document.addEventListener('DOMContentLoaded', function() {
+    {% if object_list %}
+    toggleTableView();
+    {% endif %}
+});
+</script>
+
+<style>
+.table-modern tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.table-modern tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.08);
+    transform: scale(1.01);
+}
+
+.table-modern tfoot tr {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+    font-size: 1.05rem;
+}
+
+.text-info {
+    color: #0dcaf0 !important;
+}
+
+.text-success {
+    color: #198754 !important;
+}
+
+.text-warning {
+    color: #ffc107 !important;
+}
+
+.badge {
+    padding: 0.35em 0.65em;
+    font-size: 0.85em;
+}
+</style>
+{% endblock %}

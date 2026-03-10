@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Сообщения пользователей{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
+    <h2 class="mb-0 fw-semibold"><i class="bi bi-inbox me-2 text-primary"></i>Сообщения пользователей</h2>
+    <a href="{% url 'core:dashboard' %}" class="btn btn-outline-secondary btn-sm btn-soft">
+        <i class="bi bi-arrow-left me-1"></i>На главную
+    </a>
+</div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 table-modern">
+            <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Пользователь</th>
+                <th>Тема</th>
+                <th>Статус</th>
+                <th class="text-end">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for feedback in object_list %}
+                <tr>
+                    <td>{{ feedback.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ feedback.user.get_full_name|default:feedback.user.username }}</td>
+                    <td>
+                        <div class="fw-semibold">{{ feedback.subject }}</div>
+                        <div class="text-muted small">{{ feedback.message }}</div>
+                    </td>
+                    <td>
+                        {% if feedback.status == "new" %}
+                            <span class="badge bg-warning text-dark">Новый</span>
+                        {% else %}
+                            <span class="badge bg-success">Просмотрено</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <form method="post" action="{% url 'core:feedback_status' feedback.pk %}" class="d-inline-flex align-items-center gap-2">
+                            {% csrf_token %}
+                            <select name="status" class="form-select form-select-sm" style="width:auto;">
+                                <option value="new" {% if feedback.status == "new" %}selected{% endif %}>Новый</option>
+                                <option value="reviewed" {% if feedback.status == "reviewed" %}selected{% endif %}>Просмотрено</option>
+                            </select>
+                            <button class="btn btn-outline-primary btn-sm btn-soft" type="submit">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'core:feedback_delete' feedback.pk %}" class="d-inline-block ms-1" onsubmit="return confirm('Удалить это сообщение?');">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger btn-sm btn-soft" type="submit">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">Пока нет сообщений</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

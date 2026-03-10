@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Мои табели{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <div class="fade-in-up mb-3">
+            <p class="text-muted small mb-1">Личный кабинет</p>
+            <h2 class="mb-0 fw-semibold"><i class="bi bi-calendar-event me-2 text-primary"></i>Мои табели</h2>
+        </div>
+        <div class="card shadow-soft border-0 glass-surface fade-in-up" data-delay="100">
+            <div class="table-responsive">
+        <table class="table align-middle mb-0 table-modern table-elevated">
+            <thead class="table-light table-header-sticky">
+            <tr>
+                <th>Дисциплина</th>
+                <th>Группа</th>
+                <th>Период</th>
+                <th>Часы</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for t in object_list %}
+                <tr>
+                    <td>{% if t.subject %}{{ t.subject.name }}{% else %}—{% endif %}</td>
+                    <td>{% if t.group %}{{ t.group.name }}{% else %}—{% endif %}</td>
+                    <td>
+                        {% if t.period_from and t.period_to %}
+                            {{ t.period_from|date:"d.m.Y" }} - {{ t.period_to|date:"d.m.Y" }}
+                        {% elif t.period %}
+                            {{ t.period|date:"m.Y" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ t.total_hours }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if t.status == 'draft' %}bg-secondary
+                            {% elif t.status == 'approved' %}bg-success
+                            {% elif t.status == 'paid' %}bg-primary
+                            {% endif %}">
+                            {{ t.get_status_display }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'core:timesheet_pdf' t.pk %}" class="btn btn-outline-secondary btn-sm btn-soft">
+                            <i class="bi bi-filetype-pdf me-1"></i>PDF
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Нет данных</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+</div>
+{% endblock %}
+
+

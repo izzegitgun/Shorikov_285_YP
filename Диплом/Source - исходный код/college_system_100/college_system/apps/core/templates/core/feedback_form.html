@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load form_tags %}
+{% block title %}Сообщить идею или ошибку{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 fade-in-up">
+        <div class="card shadow-soft border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4 text-center">
+                    <div class="auth-icon mb-3 bg-info-subtle text-info">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <h2 class="h4 fw-semibold mb-1">Сообщение администратору</h2>
+                    <p class="text-muted mb-0 small">Опишите новую идею, пожелание или ошибку. Администратор увидит ваше сообщение в личном кабинете.</p>
+                </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" for="id_subject">Тема</label>
+                        {{ form.subject|add_class:"form-control" }}
+                        {% if form.subject.errors %}
+                            <div class="text-danger small mt-1">{{ form.subject.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="id_message">Сообщение</label>
+                        {{ form.message|add_class:"form-control" }}
+                        {% if form.message.errors %}
+                            <div class="text-danger small mt-1">{{ form.message.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-soft"><i class="bi bi-send me-1"></i>Отправить</button>
+                        <a href="{% url 'core:dashboard' %}" class="btn btn-outline-secondary btn-soft"><i class="bi bi-x-lg me-1"></i>Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 fade-in-up" data-delay="100">
+        <div class="card border-0 shadow-soft">
+            <div class="card-body">
+                <h5 class="fw-semibold">Зачем это нужно?</h5>
+                <p class="text-muted small mb-2">Ваши предложения помогают улучшить систему и сделать учёт рабочего времени удобнее.</p>
+                <p class="text-muted small mb-0">Если нужно срочно решить проблему, свяжитесь с администратором напрямую.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

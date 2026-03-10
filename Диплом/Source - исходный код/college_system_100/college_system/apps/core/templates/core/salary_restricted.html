@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Раздел недоступен{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="text-center fade-in-up auth-card-wrapper">
+        <div class="card glass-surface shadow-soft border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-3">
+                    <div class="auth-icon mb-2">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+                    <h2 class="h5 fw-semibold mb-2">Этот раздел вам недоступен</h2>
+                    <p class="text-muted mb-4">Пожалуйста, обратитесь к системному администратору для получения доступа к разделу «Зарплата».</p>
+                </div>
+                <a href="{% url 'core:dashboard' %}" class="btn btn-primary btn-soft w-100">
+                    <i class="bi bi-arrow-left-circle me-1"></i>Вернуться на главную
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

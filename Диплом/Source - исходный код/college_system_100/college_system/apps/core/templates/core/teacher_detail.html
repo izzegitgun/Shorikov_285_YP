@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ object.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
+    <h2 class="mb-0 fw-semibold"><i class="bi bi-person-badge me-2 text-primary"></i>{{ object.full_name }}</h2>
+    {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
+    <div class="d-flex gap-2">
+        <a href="{% url 'core:teacher_edit' object.pk %}" class="btn btn-primary btn-sm btn-soft">
+            <i class="bi bi-pencil-square me-1"></i>Редактировать
+        </a>
+        <a href="{% url 'core:teacher_delete' object.pk %}" class="btn btn-outline-danger btn-sm btn-soft">
+            <i class="bi bi-trash3 me-1"></i>Удалить
+        </a>
+    </div>
+    {% endif %}
+</div>
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Должность</dt>
+            <dd class="col-sm-9">{{ object.position }}</dd>
+            <dt class="col-sm-3">Учёная степень</dt>
+            <dd class="col-sm-9">{{ object.academic_degree }}</dd>
+            <dt class="col-sm-3">Ставка</dt>
+            <dd class="col-sm-9">{{ object.rate }}</dd>
+            <dt class="col-sm-3">Активен</dt>
+            <dd class="col-sm-9">{{ object.is_active|yesno:"Да,Нет" }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}
+
+

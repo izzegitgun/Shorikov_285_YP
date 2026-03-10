@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Новая нагрузка{% endblock %}
+{% block content %}
+<div class="fade-in-up">
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="auth-icon bg-primary-subtle text-primary">
+            <i class="bi bi-journal-plus"></i>
+        </div>
+        <div>
+            <p class="text-muted small mb-1">Планирование занятия</p>
+            <h1 class="h5 fw-semibold mb-0">Новая нагрузка</h1>
+        </div>
+    </div>
+</div>
+<div class="card shadow-soft border-0 glass-surface fade-in-up" data-delay="60">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-4">
+                {{ form.teacher.label_tag }}{{ form.teacher }}
+            </div>
+            <div class="col-md-4">
+                {{ form.subject.label_tag }}{{ form.subject }}
+            </div>
+            <div class="col-md-4">
+                {{ form.group.label_tag }}{{ form.group }}
+            </div>
+            <div class="col-md-4">
+                {{ form.date.label_tag }}{{ form.date }}
+            </div>
+            <div class="col-md-4">
+                {{ form.activity_type.label_tag }}{{ form.activity_type }}
+            </div>
+            <div class="col-md-4">
+                {{ form.pair_slot.label_tag }}{{ form.pair_slot }}
+            </div>
+            <div class="col-12">
+                {{ form.description.label_tag }}{{ form.description }}
+            </div>
+            <div class="col-12 mt-2 d-flex gap-2 justify-content-end">
+                <a href="{% url 'core:workload_list' %}" class="btn btn-outline-secondary btn-soft">
+                    <i class="bi bi-x-lg me-1"></i>Отмена
+                </a>
+                <button type="submit" class="btn btn-primary btn-soft">
+                    <i class="bi bi-check2 me-1"></i>Сохранить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

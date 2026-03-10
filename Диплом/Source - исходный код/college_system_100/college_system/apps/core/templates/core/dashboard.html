@@ -1,0 +1,649 @@
+{% extends "base.html" %}
+{% block title %}Панель управления - КПСУ 2026{% endblock %}
+{% block content %}
+
+{% if user.role == "teacher" %}
+    {# Упрощённая панель для преподавателей #}
+    <div class="fade-in-up">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1 fw-semibold">
+                    <i class="bi bi-speedometer2 me-2 text-primary"></i>Панель управления
+                </h2>
+                <p class="text-muted mb-0">Добро пожаловать, {{ user.get_full_name|default:user.username }}!</p>
+            </div>
+        </div>
+
+        {# Быстрые ссылки на все вкладки #}
+        <div class="row g-3 mb-4 fade-in-up" data-delay="50">
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:my_timesheets' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Мои табели</span>
+                    {% if my_timesheets_count %}
+                        <small class="text-muted d-block mt-1">{{ my_timesheets_count }} записей</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:my_salaries' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Моя зарплата</span>
+                    {% if my_salary_total %}
+                        <small class="text-muted d-block mt-1">Всего: {{ my_salary_total|floatformat:2 }} ₽</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:workload_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Моя нагрузка</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:feedback_submit' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-chat-left-text"></i>
+                    <span>Обратная связь</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {# Моя зарплата #}
+            <div class="col-lg-6 fade-in-up" data-delay="100">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-wallet2 me-2 text-success"></i>Моя зарплата
+                        </h5>
+                        <a href="{% url 'core:my_salaries' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                            Все записи <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if my_salaries %}
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-0">Период</th>
+                                            <th class="border-0 text-end">Базовая</th>
+                                            <th class="border-0 text-end">Премия</th>
+                                            <th class="border-0 text-end fw-bold">Итого</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for s in my_salaries %}
+                                        <tr>
+                                            <td>{{ s.period|date:"m.Y" }}</td>
+                                            <td class="text-end">{{ s.base_salary|floatformat:2 }} ₽</td>
+                                            <td class="text-end text-success">{{ s.bonus|floatformat:2 }} ₽</td>
+                                            <td class="text-end fw-bold text-primary">{{ s.total_amount|floatformat:2 }} ₽</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                <p class="mb-0">Нет данных о зарплате</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# Моя нагрузка #}
+            <div class="col-lg-6 fade-in-up" data-delay="150">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-journal-text me-2 text-info"></i>Ближайшие занятия
+                        </h5>
+                        <a href="{% url 'core:workload_list' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                            Вся нагрузка <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if my_upcoming_workload %}
+                            <div class="list-group list-group-flush">
+                                {% for w in my_upcoming_workload %}
+                                <div class="list-group-item border-0 px-0 py-2">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-primary-subtle text-primary me-2">
+                                                    {{ w.date|date:"d.m" }}
+                                                </span>
+                                                <span class="text-muted small">{{ w.get_pair_slot_display }}</span>
+                                            </div>
+                                            <h6 class="mb-1 fw-semibold">{{ w.subject.name }}</h6>
+                                            <p class="mb-0 small text-muted">
+                                                <i class="bi bi-people me-1"></i>{{ w.group.name|default:"—" }}
+                                                <span class="ms-2">
+                                                    <i class="bi bi-tag me-1"></i>{{ w.get_activity_type_display }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if not forloop.last %}
+                                <hr class="my-1">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                                <p class="mb-0">Нет предстоящих занятий</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Мои табели - краткий просмотр #}
+        {% if my_timesheets %}
+        <div class="mt-4 fade-in-up" data-delay="200">
+            <div class="card shadow-soft border-0">
+                <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="bi bi-calendar-check me-2 text-warning"></i>Последние табели
+                    </h5>
+                    <a href="{% url 'core:my_timesheets' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                        Все табели <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-0">Дисциплина</th>
+                                    <th class="border-0">Группа</th>
+                                    <th class="border-0">Период</th>
+                                    <th class="border-0 text-end">Часы</th>
+                                    <th class="border-0">Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in my_timesheets %}
+                                <tr>
+                                    <td>{% if t.subject %}{{ t.subject.name }}{% else %}—{% endif %}</td>
+                                    <td>{% if t.group %}{{ t.group.name }}{% else %}—{% endif %}</td>
+                                    <td>
+                                        {% if t.period_from and t.period_to %}
+                                            {{ t.period_from|date:"d.m.Y" }} - {{ t.period_to|date:"d.m.Y" }}
+                                        {% elif t.period %}
+                                            {{ t.period|date:"m.Y" }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end fw-semibold">{{ t.total_hours|default:"0.00" }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if t.status == 'draft' %}bg-secondary
+                                            {% elif t.status == 'approved' %}bg-success
+                                            {% elif t.status == 'paid' %}bg-primary
+                                            {% endif %}">
+                                            {{ t.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% elif user.role == "accountant" %}
+    {# Панель для бухгалтера #}
+    <div class="fade-in-up">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1 fw-semibold">
+                    <i class="bi bi-speedometer2 me-2 text-primary"></i>Панель управления
+                </h2>
+                <p class="text-muted mb-0">Управление зарплатами и табелями</p>
+            </div>
+        </div>
+
+        {# Быстрые ссылки #}
+        <div class="row g-3 mb-4 fade-in-up" data-delay="50">
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:salary_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-currency-exchange"></i>
+                    <span>Ведомости</span>
+                    {% if salary_total %}
+                        <small class="text-muted d-block mt-1">{{ salary_total }} записей</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:salary_create' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Начислить зарплату</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:timesheet_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-calendar-week"></i>
+                    <span>Табели</span>
+                    {% if timesheets_pending %}
+                        <small class="text-danger d-block mt-1">{{ timesheets_pending }} в черновике</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:workload_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Нагрузка</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {# Статистика по зарплатам #}
+            <div class="col-lg-4 fade-in-up" data-delay="100">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-cash-stack me-2 text-success"></i>Статистика зарплат
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">За год:</span>
+                            <span class="fw-bold text-success fs-5">{{ salary_total_amount|floatformat:2 }} ₽</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">За месяц:</span>
+                            <span class="fw-bold text-primary">{{ salary_month_amount|floatformat:2 }} ₽</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Всего записей:</span>
+                            <span class="badge bg-primary-subtle text-primary">{{ salary_total }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Последние зарплаты #}
+            <div class="col-lg-8 fade-in-up" data-delay="150">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-wallet2 me-2 text-primary"></i>Последние зарплаты
+                        </h5>
+                        <a href="{% url 'core:salary_list' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                            Все записи <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_salaries %}
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-0">Преподаватель</th>
+                                            <th class="border-0">Период</th>
+                                            <th class="border-0 text-end">Базовая</th>
+                                            <th class="border-0 text-end">Премия</th>
+                                            <th class="border-0 text-end fw-bold">Итого</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for s in recent_salaries %}
+                                        <tr>
+                                            <td>{{ s.teacher.full_name }}</td>
+                                            <td>{{ s.period|date:"m.Y" }}</td>
+                                            <td class="text-end">{{ s.base_salary|floatformat:2 }} ₽</td>
+                                            <td class="text-end text-success">{{ s.bonus|floatformat:2 }} ₽</td>
+                                            <td class="text-end fw-bold text-primary">{{ s.total_amount|floatformat:2 }} ₽</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                <p class="mb-0">Нет данных о зарплатах</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Табели в черновике #}
+        {% if pending_timesheets_list %}
+        <div class="mt-4 fade-in-up" data-delay="200">
+            <div class="card shadow-soft border-0">
+                <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="bi bi-calendar-check me-2 text-warning"></i>Табели в черновике
+                        <span class="badge bg-warning ms-2">{{ timesheets_pending }}</span>
+                    </h5>
+                    <a href="{% url 'core:timesheet_list' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                        Все табели <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-0">Преподаватель</th>
+                                    <th class="border-0">Дисциплина</th>
+                                    <th class="border-0">Группа</th>
+                                    <th class="border-0">Период</th>
+                                    <th class="border-0 text-end">Часы</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in pending_timesheets_list %}
+                                <tr>
+                                    <td>{{ t.teacher.full_name }}</td>
+                                    <td>{% if t.subject %}{{ t.subject.name }}{% else %}—{% endif %}</td>
+                                    <td>{% if t.group %}{{ t.group.name }}{% else %}—{% endif %}</td>
+                                    <td>
+                                        {% if t.period_from and t.period_to %}
+                                            {{ t.period_from|date:"d.m.Y" }} - {{ t.period_to|date:"d.m.Y" }}
+                                        {% elif t.period %}
+                                            {{ t.period|date:"m.Y" }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end fw-semibold">{{ t.total_hours|default:"0.00" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% elif user.role == "curator" %}
+    {# Панель для куратора #}
+    <div class="fade-in-up">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1 fw-semibold">
+                    <i class="bi bi-speedometer2 me-2 text-primary"></i>Панель управления
+                </h2>
+                <p class="text-muted mb-0">Управление преподавателями, предметами и нагрузкой</p>
+            </div>
+        </div>
+
+        {# Быстрые ссылки #}
+        <div class="row g-3 mb-4 fade-in-up" data-delay="50">
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:teacher_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-people"></i>
+                    <span>Преподаватели</span>
+                    {% if teachers_total %}
+                        <small class="text-muted d-block mt-1">{{ active_teachers }} активных</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:subject_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-journal-bookmark"></i>
+                    <span>Предметы</span>
+                    {% if subjects_active %}
+                        <small class="text-muted d-block mt-1">{{ subjects_active }} активных</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:group_list' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-collection"></i>
+                    <span>Группы</span>
+                    {% if groups_active %}
+                        <small class="text-muted d-block mt-1">{{ groups_active }} активных</small>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:workload_create' %}" class="quick-link-card text-decoration-none">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Добавить нагрузку</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {# Статистика #}
+            <div class="col-lg-4 fade-in-up" data-delay="100">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-bar-chart me-2 text-info"></i>Статистика
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Преподаватели:</span>
+                            <div class="text-end">
+                                <span class="fw-bold text-primary">{{ active_teachers }}</span>
+                                <small class="text-muted d-block">из {{ teachers_total }}</small>
+                            </div>
+                        </div>
+                        {% if inactive_teachers %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Неактивных:</span>
+                            <span class="badge bg-warning-subtle text-warning">{{ inactive_teachers }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Предметы:</span>
+                            <span class="badge bg-primary-subtle text-primary">{{ subjects_active }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Группы:</span>
+                            <span class="badge bg-success-subtle text-success">{{ groups_active }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Последние преподаватели #}
+            <div class="col-lg-4 fade-in-up" data-delay="150">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-people me-2 text-primary"></i>Преподаватели
+                        </h5>
+                        <a href="{% url 'core:teacher_list' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                            Все <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_teachers %}
+                            <div class="list-group list-group-flush">
+                                {% for teacher in recent_teachers %}
+                                <div class="list-group-item border-0 px-0 py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1 fw-semibold">{{ teacher.full_name }}</h6>
+                                            <p class="mb-0 small text-muted">
+                                                <i class="bi bi-briefcase me-1"></i>{{ teacher.position }}
+                                            </p>
+                                        </div>
+                                        <span class="badge bg-success-subtle text-success">Активен</span>
+                                    </div>
+                                </div>
+                                {% if not forloop.last %}
+                                <hr class="my-1">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                <p class="mb-0">Нет данных</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# Последние нагрузки #}
+            <div class="col-lg-4 fade-in-up" data-delay="200">
+                <div class="card shadow-soft border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-journal-text me-2 text-info"></i>Последние нагрузки
+                        </h5>
+                        <a href="{% url 'core:workload_list' %}" class="btn btn-sm btn-outline-primary btn-soft">
+                            Все <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_workloads %}
+                            <div class="list-group list-group-flush">
+                                {% for w in recent_workloads %}
+                                <div class="list-group-item border-0 px-0 py-2">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-primary-subtle text-primary me-2">
+                                                    {{ w.date|date:"d.m" }}
+                                                </span>
+                                                <span class="text-muted small">{{ w.get_pair_slot_display }}</span>
+                                            </div>
+                                            <h6 class="mb-1 fw-semibold">{{ w.subject.name }}</h6>
+                                            <p class="mb-0 small text-muted">
+                                                <i class="bi bi-person me-1"></i>{{ w.teacher.full_name }}
+                                                <span class="ms-2">
+                                                    <i class="bi bi-people me-1"></i>{{ w.group.name|default:"—" }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if not forloop.last %}
+                                <hr class="my-1">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                <p class="mb-0">Нет данных</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% else %}
+    {# Стандартная панель для других ролей #}
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+        <div>
+            <h2 class="mb-1 fw-semibold"><i class="bi bi-speedometer2 me-2 text-primary"></i>Панель управления</h2>
+            <p class="text-muted mb-0">Учет нагрузки, табелей и заработной платы преподавателей</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <a href="{% url 'core:teacher_list' %}" class="text-decoration-none text-body">
+                <div class="card shadow-soft border-0 hover-lift fade-in-up" data-delay="0">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Преподаватели</h6>
+                            <h3 class="fw-bold mb-0">{{ teachers_count }}</h3>
+                            <span class="badge bg-primary-subtle text-primary mt-2">Перейти к списку</span>
+                        </div>
+                        <span class="dashboard-icon bg-primary-subtle text-primary">
+                            <i class="bi bi-people-fill"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'core:subject_list' %}" class="text-decoration-none text-body">
+                <div class="card shadow-soft border-0 hover-lift fade-in-up" data-delay="70">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Предметы</h6>
+                            <h3 class="fw-bold mb-0">{{ subjects_count }}</h3>
+                            <span class="badge bg-secondary-subtle text-secondary mt-2">Структура учебного плана</span>
+                        </div>
+                        <span class="dashboard-icon bg-secondary-subtle text-secondary">
+                            <i class="bi bi-journal-bookmark"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'core:group_list' %}" class="text-decoration-none text-body">
+                <div class="card shadow-soft border-0 hover-lift fade-in-up" data-delay="110">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Группы</h6>
+                            <h3 class="fw-bold mb-0">{{ groups_count }}</h3>
+                            <span class="badge bg-success-subtle text-success mt-2">Студенческие потоки</span>
+                        </div>
+                        <span class="dashboard-icon bg-success-subtle text-success">
+                            <i class="bi bi-collection"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'core:workload_list' %}" class="text-decoration-none text-body">
+                <div class="card shadow-soft border-0 hover-lift fade-in-up" data-delay="140">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Нагрузка сегодня</h6>
+                            <h3 class="fw-bold mb-0">{{ workload_today }}</h3>
+                            <span class="badge bg-info-subtle text-info mt-2">Смотреть нагрузку</span>
+                        </div>
+                        <span class="dashboard-icon bg-info-subtle text-info">
+                            <i class="bi bi-journal-text"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'core:timesheet_list' %}" class="text-decoration-none text-body">
+                <div class="card shadow-soft border-0 hover-lift fade-in-up" data-delay="210">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Табели в черновике</h6>
+                            <h3 class="fw-bold mb-0">{{ pending_timesheets }}</h3>
+                            <span class="badge bg-warning-subtle text-warning mt-2">Перейти к табелям</span>
+                        </div>
+                        <span class="dashboard-icon bg-warning-subtle text-warning">
+                            <i class="bi bi-calendar-check"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    {% include "core/dashboard_quick_actions.html" %}
+{% endif %}
+
+{% endblock %}

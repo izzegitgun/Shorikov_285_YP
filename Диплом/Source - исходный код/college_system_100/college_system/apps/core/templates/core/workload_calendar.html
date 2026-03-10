@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Календарь нагрузки{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
+    <div>
+        <p class="text-muted small mb-1 text-uppercase">Календарь нагрузки</p>
+        <div class="d-flex align-items-center gap-2">
+            <h1 class="h4 mb-0">{{ current_month }}</h1>
+            <span class="badge rounded-pill bg-primary-subtle text-primary small">
+                <i class="bi bi-calendar3 me-1"></i>КПСУ 2026
+            </span>
+        </div>
+        {% if selected_teacher %}
+            <div class="text-muted small mt-1">
+                <i class="bi bi-person-badge me-1"></i>Отфильтровано по: {{ selected_teacher.full_name }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-outline-secondary btn-sm btn-soft" href="?{% if selected_teacher %}teacher={{ selected_teacher.id }}&{% endif %}">
+            <i class="bi bi-house-door me-1"></i>Текущий месяц
+        </a>
+        <div class="btn-group shadow-sm">
+            <a class="btn btn-outline-secondary btn-sm btn-soft" href="?month={{ prev_month.month }}&year={{ prev_month.year }}{% if selected_teacher %}&teacher={{ selected_teacher.id }}{% endif %}">
+                <i class="bi bi-arrow-left"></i> Предыдущий
+            </a>
+            <a class="btn btn-outline-secondary btn-sm btn-soft" href="?month={{ next_month.month }}&year={{ next_month.year }}{% if selected_teacher %}&teacher={{ selected_teacher.id }}{% endif %}">
+                Следующий <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if teachers %}
+<form method="get" class="row g-2 align-items-end mb-4 glass-surface shadow-soft p-3 rounded-3">
+    <div class="col-md-5">
+        <label class="form-label">Преподаватель</label>
+        <select class="form-select" name="teacher">
+            <option value="">Все</option>
+            {% for teacher in teachers %}
+                <option value="{{ teacher.id }}" {% if selected_teacher and teacher.id == selected_teacher.id %}selected{% endif %}>{{ teacher.full_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Месяц</label>
+        <input type="number" min="1" max="12" name="month" value="{{ month }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Год</label>
+        <input type="number" name="year" value="{{ year }}" class="form-control">
+    </div>
+    <div class="col-md-1 d-grid">
+        <button type="submit" class="btn btn-primary btn-soft">OK</button>
+    </div>
+</form>
+{% endif %}
+
+<div class="calendar-wrapper glass-surface shadow-soft rounded-4 p-3 fade-in-up" data-delay="80">
+    <div class="row row-cols-7 g-3 text-center fw-semibold text-muted small mb-2">
+        <div class="col">Пн</div>
+        <div class="col">Вт</div>
+        <div class="col">Ср</div>
+        <div class="col">Чт</div>
+        <div class="col">Пт</div>
+        <div class="col">Сб</div>
+        <div class="col">Вс</div>
+    </div>
+    <div class="row row-cols-7 g-3">
+        {% for week in weeks %}
+            {% for day in week %}
+                {% with day_id=day.date|date:"Ymd" %}
+                <div class="col">
+                    <button type="button"
+                            class="day-card w-100 h-100 text-start rounded-4 border-0 p-3
+                                   {% if not day.in_month %}day-muted{% endif %}
+                                   {% if day.is_today %}day-today{% endif %}
+                                   {% if day.is_weekend %}day-weekend{% endif %}"
+                            data-day="{{ day.date|date:'d.m.Y' }}"
+                            data-target="#dayModal"
+                            data-day-id="{{ day_id }}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-white text-secondary border day-number-pill">{{ day.date.day }}</span>
+                            {% if day.workloads %}
+                                <span class="badge bg-primary-subtle text-primary">
+                                    <i class="bi bi-book-half me-1"></i>{{ day.workloads|length }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if day.workloads %}
+                            <div class="d-flex flex-column gap-1">
+                                {% for wl in day.workloads|slice:":2" %}
+                                    <div class="small text-start rounded-3 px-2 py-1 bg-primary-subtle text-primary-emphasis">
+                                        <div class="fw-semibold">{{ wl.subject.name }}</div>
+                                        <div class="text-muted">
+                                            {{ wl.get_activity_type_display }}
+                                            {% if wl.group %} · {{ wl.group.name }}{% endif %}
+                                            {% if wl.pair_slot %} · пара {{ wl.pair_slot }}{% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% if day.workloads|length > 2 %}
+                                    <div class="text-primary small">+ ещё {{ day.workloads|length|add:"-2" }}</div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="text-muted small fst-italic">Нет нагрузки</div>
+                        {% endif %}
+                    </button>
+                    <div id="detail-{{ day_id }}" class="d-none">
+                        {% if day.workloads %}
+                            {% for wl in day.workloads %}
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="fw-semibold">{{ wl.subject.name }}</div>
+                                        {% if wl.pair_slot %}<span class="badge bg-primary-subtle text-primary">Пара {{ wl.pair_slot }}</span>{% endif %}
+                                    </div>
+                                    <div class="text-muted small">
+                                        {{ wl.get_activity_type_display }}
+                                        {% if wl.group %} · {{ wl.group.name }}{% endif %}
+                                    </div>
+                                    {% if wl.description %}<div class="small mt-1">{{ wl.description }}</div>{% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-muted">В этот день нагрузка отсутствует.</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Glass morph modal -->
+<div class="modal fade" id="dayModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content glass">
+      <div class="modal-header border-0">
+        <div>
+            <p class="text-muted small mb-0">Детали дня</p>
+            <h5 class="modal-title" id="dayModalLabel"></h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="dayModalContent" class="small"></div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.glass {
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.4);
+}
+.calendar-wrapper {
+    background: radial-gradient(100% 100% at 0% 0%, rgba(99, 132, 255, 0.08), transparent),
+                radial-gradient(100% 100% at 100% 0%, rgba(255, 193, 7, 0.08), transparent),
+                rgba(255,255,255,0.9);
+    transition: all 0.3s ease;
+}
+.day-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.6);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.day-number-pill {
+    min-width: 2.1rem;
+    justify-content: center;
+}
+.day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    border-color: rgba(99,132,255,0.6);
+}
+.day-card:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+.day-muted {
+    background: rgba(248,249,252,0.8);
+}
+.day-weekend .day-number-pill {
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.6);
+}
+.day-today {
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.7), 0 16px 40px rgba(37, 99, 235, 0.25);
+    position: relative;
+}
+.day-today::after {
+    content: "Сегодня";
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.1);
+    color: rgba(37, 99, 235, 0.96);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+@media (max-width: 768px) {
+    .day-card { padding: 1rem; }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const modalEl = document.getElementById("dayModal");
+    const modal = new bootstrap.Modal(modalEl);
+    const modalTitle = document.getElementById("dayModalLabel");
+    const modalContent = document.getElementById("dayModalContent");
+
+    document.querySelectorAll(".day-card").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const dayLabel = btn.getAttribute("data-day");
+            const dayId = btn.getAttribute("data-day-id");
+            const detail = document.getElementById(`detail-${dayId}`);
+            modalTitle.textContent = dayLabel;
+            modalContent.innerHTML = detail ? detail.innerHTML : "<div class='text-muted'>Нет данных</div>";
+            modal.show();
+        });
+    });
+});
+</script>
+{% endblock %}
+
+

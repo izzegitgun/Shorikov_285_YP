@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Редактирование предмета{% else %}Новый предмет{% endif %}{% endblock %}
+{% block content %}
+<div class="fade-in-up">
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="auth-icon bg-primary-subtle text-primary">
+            <i class="bi bi-journal-plus"></i>
+        </div>
+        <div>
+            <p class="text-muted small mb-1">Учебная дисциплина</p>
+            <h1 class="h5 fw-semibold mb-0">
+                {% if object %}Редактирование предмета{% else %}Новый предмет{% endif %}
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="card shadow-soft border-0 glass-surface fade-in-up" data-delay="60">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-6">
+                {{ form.name.label_tag }}{{ form.name }}
+            </div>
+            <div class="col-md-6">
+                {{ form.code.label_tag }}{{ form.code }}
+            </div>
+            <div class="col-12">
+                {{ form.description.label_tag }}{{ form.description }}
+            </div>
+            <div class="col-md-4 d-flex align-items-center mt-2">
+                <div class="form-check">
+                    {{ form.is_active }}
+                    <label class="form-check-label ms-1" for="{{ form.is_active.id_for_label }}">Активен</label>
+                </div>
+            </div>
+            <div class="col-12 mt-2 d-flex gap-2 justify-content-end">
+                <a href="{% url 'core:subject_list' %}" class="btn btn-outline-secondary btn-soft">
+                    <i class="bi bi-x-lg me-1"></i>Отмена
+                </a>
+                <button type="submit" class="btn btn-primary btn-soft">
+                    <i class="bi bi-check2 me-1"></i>Сохранить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

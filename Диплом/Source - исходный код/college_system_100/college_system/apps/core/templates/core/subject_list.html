@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Предметы{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
+    <h2 class="mb-0 fw-semibold"><i class="bi bi-journal-bookmark me-2 text-primary"></i>Предметы</h2>
+    {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
+    <a href="{% url 'core:subject_create' %}" class="btn btn-primary btn-sm btn-soft">
+        <i class="bi bi-plus-lg me-1"></i>Добавить
+    </a>
+    {% endif %}
+</div>
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 table-modern">
+            <thead class="table-light table-header-sticky">
+            <tr>
+                <th>Название</th>
+                <th>Код</th>
+                <th>Активен</th>
+                <th class="text-end"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for subject in object_list %}
+                <tr>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.code }}</td>
+                    <td>{{ subject.is_active|yesno:"Да,Нет" }}</td>
+                    <td class="text-end">
+                        {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
+                        <a href="{% url 'core:subject_edit' subject.pk %}" class="btn btn-outline-primary btn-sm btn-soft">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'core:subject_delete' subject.pk %}" class="btn btn-outline-danger btn-sm btn-soft">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Нет данных</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

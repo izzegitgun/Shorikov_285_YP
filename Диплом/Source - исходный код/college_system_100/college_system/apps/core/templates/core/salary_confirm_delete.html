@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Удаление записи зарплаты{% endblock %}
+{% block content %}
+<h2 class="mb-3 fw-semibold fade-in-up"><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Удалить запись зарплаты?</h2>
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="card-body">
+        <p class="mb-3 text-muted">
+            Преподаватель: <strong>{{ object.teacher.full_name }}</strong><br>
+            Период: <strong>{{ object.period|date:"m.Y" }}</strong><br>
+            Базовая: <strong>{{ object.base_salary }}</strong>, премия: <strong>{{ object.bonus }}</strong>, итого: <strong>{{ object.total_amount }}</strong>
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-soft">
+                <i class="bi bi-trash3 me-1"></i>Удалить
+            </button>
+            <a href="{% url 'core:salary_list' %}" class="btn btn-outline-secondary btn-soft">
+                <i class="bi bi-x-lg me-1"></i>Отмена
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Моя зарплата{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-8">
+        <div class="fade-in-up mb-3">
+            <p class="text-muted small mb-1">Личный кабинет</p>
+            <h2 class="mb-0 fw-semibold"><i class="bi bi-wallet2 me-2 text-primary"></i>Моя зарплата</h2>
+        </div>
+<div class="card shadow-soft border-0 glass-surface fade-in-up" data-delay="100">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 table-modern table-elevated">
+            <thead class="table-light table-header-sticky">
+            <tr>
+                <th>Период</th>
+                <th>Базовая</th>
+                <th>Премия</th>
+                <th>Итого</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for s in object_list %}
+                <tr>
+                    <td>{{ s.period|date:"m.Y" }}</td>
+                    <td>{{ s.base_salary }}</td>
+                    <td>{{ s.bonus }}</td>
+                    <td>{{ s.total_amount }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Нет данных</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Нагрузка{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
+    <h2 class="mb-0 fw-semibold"><i class="bi bi-journal-text me-2 text-primary"></i>Нагрузка</h2>
+    {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
+    <a href="{% url 'core:workload_create' %}" class="btn btn-primary btn-sm btn-soft">
+        <i class="bi bi-plus-lg me-1"></i>Добавить
+    </a>
+    {% endif %}
+</div>
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 table-modern">
+            <thead class="table-light table-header-sticky">
+            <tr>
+                <th>Дата</th>
+                <th>Пара</th>
+                <th>Группа</th>
+                <th>Преподаватель</th>
+                <th>Предмет</th>
+                <th>Тип</th>
+                <th>Описание</th>
+                <th class="text-end"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for w in object_list %}
+                <tr>
+                    <td>{{ w.date }}</td>
+                    <td>{{ w.get_pair_slot_display }}</td>
+                    <td>{{ w.group.name }}</td>
+                    <td>{{ w.teacher.full_name }}</td>
+                    <td>{{ w.subject.name }}</td>
+                    <td>{{ w.get_activity_type_display }}</td>
+                    <td>{{ w.description }}</td>
+                    <td class="text-end">
+                        {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
+                        <a href="{% url 'core:workload_edit' w.pk %}" class="btn btn-outline-primary btn-sm btn-soft">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'core:workload_delete' w.pk %}" class="btn btn-outline-danger btn-sm btn-soft">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">Нет данных</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

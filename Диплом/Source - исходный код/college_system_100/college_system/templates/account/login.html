@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account %}
+{% load form_tags %}
+
+{% block title %}Вход в систему - КПСУ 2026{% endblock %}
+
+{% block content %}
+<div class="row align-items-center g-4 py-4">
+    <div class="col-lg-6">
+        <div class="card shadow-soft border-0 h-100 fade-in-up">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="auth-icon bg-primary-subtle text-primary">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <div>
+                        <p class="text-uppercase text-muted small mb-1">КПСУ · Учёт колледжа</p>
+                        <h1 class="h4 fw-semibold mb-0">Вход в личный кабинет</h1>
+                    </div>
+                </div>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger small mb-3" role="alert">
+                        Проверьте логин и пароль. Если забыли доступ, восстановите его через почту.
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'account_login' %}" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label" for="id_login">Логин или e‑mail</label>
+                        {{ form.login|add_class:"form-control form-control-lg" }}
+                        {% for error in form.login.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="id_password">Пароль</label>
+                        {{ form.password|add_class:"form-control form-control-lg" }}
+                        {% for error in form.password.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            {{ form.remember|add_class:"form-check-input" }}
+                            <label class="form-check-label small" for="id_remember">
+                                Запомнить устройство
+                            </label>
+                        </div>
+                        <a class="small text-decoration-none" href="{% url 'account_reset_password' %}">
+                            Забыл пароль
+                        </a>
+                    </div>
+
+                    <button class="btn btn-primary w-100 btn-soft" type="submit">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+                    </button>
+                </form>
+
+                <hr class="my-4">
+                <div class="d-flex flex-column gap-2">
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Нет доступа?</span>
+                        <a class="text-decoration-none" href="{% url 'account_signup' %}">Запросить учетку</a>
+                    </div>
+                    <div class="small text-muted">
+                        Нужна помощь — напишите администратору или через раздел «Идея / ошибка».
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 d-none d-lg-block">
+        <div class="p-4 bg-body-secondary rounded-4 h-100 shadow-sm fade-in-up" data-delay="120">
+            <p class="text-uppercase text-muted small mb-2">КПСУ</p>
+            <h2 class="h4 fw-semibold mb-3">Колледж Предпринимательства и Социального Управления</h2>
+        </div>
+    </div>
+</div>
+{% endblock %}

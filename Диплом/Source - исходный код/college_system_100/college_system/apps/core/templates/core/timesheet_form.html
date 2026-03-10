@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Редактирование табеля{% else %}Новый табель{% endif %}{% endblock %}
+{% block content %}
+<h2 class="mb-3 fw-semibold fade-in-up">
+    <i class="bi bi-calendar-plus me-2 text-primary"></i>
+    {% if object %}Редактирование табеля{% else %}Новый табель{% endif %}
+</h2>
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="card-body">
+        <form method="post" id="timesheet-form">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="{{ form.teacher.id_for_label }}" class="form-label">
+                        {{ form.teacher.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.teacher }}
+                    {% if form.teacher.errors %}
+                        <div class="text-danger small">{{ form.teacher.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.subject.id_for_label }}" class="form-label">
+                        {{ form.subject.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.subject }}
+                    {% if form.subject.errors %}
+                        <div class="text-danger small">{{ form.subject.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.group.id_for_label }}" class="form-label">
+                        {{ form.group.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.group }}
+                    {% if form.group.errors %}
+                        <div class="text-danger small">{{ form.group.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{ form.period_from.id_for_label }}" class="form-label">
+                        {{ form.period_from.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.period_from }}
+                    {% if form.period_from.errors %}
+                        <div class="text-danger small">{{ form.period_from.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{ form.period_to.id_for_label }}" class="form-label">
+                        {{ form.period_to.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.period_to }}
+                    {% if form.period_to.errors %}
+                        <div class="text-danger small">{{ form.period_to.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-12">
+                    <hr class="my-3">
+                    <h5 class="mb-3">
+                        <i class="bi bi-clock-history me-2 text-primary"></i>
+                        Часы работы
+                    </h5>
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.lecture_hours.id_for_label }}" class="form-label">
+                        <i class="bi bi-book me-1 text-info"></i>
+                        {{ form.lecture_hours.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.lecture_hours }}
+                    {% if form.lecture_hours.errors %}
+                        <div class="text-danger small">{{ form.lecture_hours.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.practice_hours.id_for_label }}" class="form-label">
+                        <i class="bi bi-pencil-square me-1 text-success"></i>
+                        {{ form.practice_hours.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.practice_hours }}
+                    {% if form.practice_hours.errors %}
+                        <div class="text-danger small">{{ form.practice_hours.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.lab_hours.id_for_label }}" class="form-label">
+                        <i class="bi bi-flask me-1 text-warning"></i>
+                        {{ form.lab_hours.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {{ form.lab_hours }}
+                    {% if form.lab_hours.errors %}
+                        <div class="text-danger small">{{ form.lab_hours.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="id_total_hours" class="form-label fw-bold">
+                        <i class="bi bi-calculator me-1 text-primary"></i>
+                        Итого
+                    </label>
+                    <input type="number" 
+                           class="form-control fw-bold" 
+                           id="id_total_hours" 
+                           name="total_hours" 
+                           readonly 
+                           step="0.01"
+                           value="{% if form.total_hours.value %}{{ form.total_hours.value }}{% else %}0.00{% endif %}">
+                    {% if form.total_hours.errors %}
+                        <div class="text-danger small">{{ form.total_hours.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">
+                        {{ form.status.label }}
+                    </label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                        <div class="text-danger small">{{ form.status.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger mt-3">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-soft">
+                    <i class="bi bi-check2 me-1"></i>Сохранить
+                </button>
+                <a href="{% url 'core:timesheet_list' %}" class="btn btn-outline-secondary btn-soft">
+                    <i class="bi bi-x-lg me-1"></i>Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const lectureInput = document.getElementById('id_lecture_hours');
+    const practiceInput = document.getElementById('id_practice_hours');
+    const labInput = document.getElementById('id_lab_hours');
+    const totalInput = document.getElementById('id_total_hours');
+    
+    if (!lectureInput || !practiceInput || !labInput || !totalInput) {
+        return; // Поля не найдены, возможно форма еще не загружена
+    }
+    
+    function calculateTotal() {
+        const lecture = parseFloat(lectureInput.value) || 0;
+        const practice = parseFloat(practiceInput.value) || 0;
+        const lab = parseFloat(labInput.value) || 0;
+        const total = lecture + practice + lab;
+        totalInput.value = total.toFixed(2);
+    }
+    
+    // Подсчёт при изменении любого поля
+    lectureInput.addEventListener('input', calculateTotal);
+    practiceInput.addEventListener('change', calculateTotal);
+    practiceInput.addEventListener('input', calculateTotal);
+    labInput.addEventListener('input', calculateTotal);
+    labInput.addEventListener('change', calculateTotal);
+    
+    // Подсчёт при загрузке страницы
+    calculateTotal();
+    
+    // Валидация формы
+    const form = document.getElementById('timesheet-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const periodFrom = document.getElementById('id_period_from');
+            const periodTo = document.getElementById('id_period_to');
+            
+            if (periodFrom && periodTo && periodFrom.value && periodTo.value) {
+                if (periodFrom.value > periodTo.value) {
+                    e.preventDefault();
+                    alert('Дата "до" должна быть позже или равна дате "с"');
+                    return false;
+                }
+            }
+            
+            const lecture = parseFloat(lectureInput.value) || 0;
+            const practice = parseFloat(practiceInput.value) || 0;
+            const lab = parseFloat(labInput.value) || 0;
+            
+            if (lecture < 0 || practice < 0 || lab < 0) {
+                e.preventDefault();
+                alert('Часы не могут быть отрицательными');
+                return false;
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+#id_total_hours {
+    background-color: rgba(13, 110, 253, 0.1);
+    border-color: var(--bs-primary);
+    font-size: 1.1rem;
+}
+
+.text-info {
+    color: #0dcaf0 !important;
+}
+
+.text-success {
+    color: #198754 !important;
+}
+
+.text-warning {
+    color: #ffc107 !important;
+}
+</style>
+{% endblock %}

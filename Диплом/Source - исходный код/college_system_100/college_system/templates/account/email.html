@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account %}
+{% load form_tags %}
+
+{% block title %}{% trans "Manage Email Addresses" %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 fade-in-up">
+        <div class="card shadow-soft border-0 mb-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="auth-icon mb-3 bg-info-subtle text-info">
+                        <i class="bi bi-envelope-paper"></i>
+                    </div>
+                    <h2 class="h4 fw-semibold mb-1">{% trans "Управление адресами электронной почты" %}</h2>
+                    <p class="text-muted mb-0 small">{% trans "Добавьте новый e-mail или сделайте текущий основным." %}</p>
+                </div>
+
+                {% if emailaddresses %}
+                    <form method="post" action="{% url 'account_email' %}">
+                        {% csrf_token %}
+                        <div class="list-group mb-3">
+                            {% for emailaddress in emailaddresses %}
+                                <label class="list-group-item d-flex align-items-center justify-content-between">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="email" value="{{ emailaddress.email }}" {% if emailaddress.primary %}checked{% endif %}>
+                                        <span class="ms-2">{{ emailaddress.email }}</span>
+                                    </div>
+                                    {% if emailaddress.verified %}
+                                        <span class="badge bg-success">Подтверждён</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Ожидает подтверждения</span>
+                                    {% endif %}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-soft" name="action_primary" type="submit">{% trans "Make Primary" %}</button>
+                            <button class="btn btn-outline-info btn-soft" name="action_send" type="submit">{% trans "Re-send Verification" %}</button>
+                            <button class="btn btn-outline-danger btn-soft" name="action_remove" type="submit">{% trans "Remove" %}</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="text-muted text-center">{% trans "You currently do not have any e-mail address set up." %}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-soft border-0">
+            <div class="card-body p-4 p-md-5">
+                <h5 class="fw-semibold mb-3">{% trans "Add E-mail Address" %}</h5>
+                <form method="post" action="{% url 'account_email' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {% if form.email.errors %}
+                            <div class="text-danger small mb-1">{{ form.email.errors|join:", " }}</div>
+                        {% endif %}
+                        {{ form.email|add_class:"form-control" }}
+                    </div>
+                    <button class="btn btn-primary btn-soft" type="submit">{% trans "Add E-mail" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

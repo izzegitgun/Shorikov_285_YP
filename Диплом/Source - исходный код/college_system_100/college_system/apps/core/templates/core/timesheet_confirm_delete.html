@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Удаление табеля{% endblock %}
+{% block content %}
+<h2 class="mb-3 fw-semibold fade-in-up"><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Удалить табель?</h2>
+<div class="card shadow-soft border-0 fade-in-up" data-delay="100">
+    <div class="card-body">
+        <p class="mb-3 text-muted">
+            Преподаватель: <strong>{{ object.teacher.full_name }}</strong><br>
+            {% if object.subject %}
+            Дисциплина: <strong>{{ object.subject.name }}</strong><br>
+            {% endif %}
+            {% if object.group %}
+            Группа: <strong>{{ object.group.name }}</strong><br>
+            {% endif %}
+            Период: <strong>
+                {% if object.period_from and object.period_to %}
+                    {{ object.period_from|date:"d.m.Y" }} - {{ object.period_to|date:"d.m.Y" }}
+                {% elif object.period %}
+                    {{ object.period|date:"m.Y" }}
+                {% else %}
+                    Не указан
+                {% endif %}
+            </strong><br>
+            Часы: <strong>{{ object.total_hours }}</strong> (Лекции: {{ object.lecture_hours }}, Практика: {{ object.practice_hours }}, Лабы: {{ object.lab_hours }})<br>
+            Статус: <strong>{{ object.get_status_display }}</strong>
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-soft">
+                <i class="bi bi-trash3 me-1"></i>Удалить
+            </button>
+            <a href="{% url 'core:timesheet_list' %}" class="btn btn-outline-secondary btn-soft">
+                <i class="bi bi-x-lg me-1"></i>Отмена
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

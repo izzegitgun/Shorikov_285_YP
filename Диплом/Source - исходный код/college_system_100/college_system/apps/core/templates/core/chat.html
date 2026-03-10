@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load form_tags %}
+
+{% block title %}Чат{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div>
+                        <p class="text-muted small mb-0">Контакты</p>
+                        <h2 class="h5 mb-0">Кураторы и преподаватели</h2>
+                    </div>
+                </div>
+                <div class="list-group small">
+                    {% for contact in contacts %}
+                        <a href="?contact={{ contact.id }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {% if selected_contact and selected_contact.id == contact.id %}active{% endif %}">
+                            <span><i class="bi bi-person-circle me-1"></i>{{ contact.get_full_name|default:contact.username }}{% if contact.role %} • {{ contact.get_role_display }}{% endif %}</span>
+                            {% if unread_map|get_item:contact.id %}
+                                <span class="badge bg-warning text-dark">{{ unread_map|get_item:contact.id }}</span>
+                            {% endif %}
+                        </a>
+                    {% empty %}
+                        <div class="text-muted">Нет доступных контактов</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm h-100 glass">
+            <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <p class="text-muted small mb-0">Диалог</p>
+                        <h2 class="h5 mb-0">
+                            {% if selected_contact %}
+                                {{ selected_contact.get_full_name|default:selected_contact.username }}
+                            {% else %}
+                                История сообщений
+                            {% endif %}
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="border rounded-4 p-3 mb-3 bg-body-tertiary flex-grow-1 overflow-auto chat-window">
+                    {% if chat_messages %}
+                        {% for item in chat_messages %}
+                            <div class="mb-3">
+                                {% if item.sender_id == request.user.id %}
+                                    <div class="d-flex justify-content-end">
+                                        <div class="p-3 rounded-4 bg-primary text-white shadow-sm message-bubble">
+                                            <div class="small fw-semibold mb-1 d-flex justify-content-between gap-3">
+                                                <span>Вы</span>
+                                                <span class="text-white-50">{{ item.created_at|date:"d.m H:i" }}</span>
+                                            </div>
+                                            <div>{{ item.body|linebreaksbr }}</div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex justify-content-start">
+                                        <div class="p-3 rounded-4 bg-white shadow-sm message-bubble">
+                                            <div class="small fw-semibold mb-1 d-flex justify-content-between gap-3">
+                                                <span>{{ item.sender.get_full_name|default:item.sender.username }}</span>
+                                                <span class="text-muted">{{ item.created_at|date:"d.m H:i" }}</span>
+                                            </div>
+                                            <div>{{ item.body|linebreaksbr }}</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted">Пока нет сообщений</div>
+                    {% endif %}
+                </div>
+
+                <form method="post" class="mt-auto">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger">Проверьте форму и попробуйте еще раз.</div>
+                    {% endif %}
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            {{ form.recipient.label_tag }}
+                            {{ form.recipient }}
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.body.label_tag }}
+                            {{ form.body }}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3 gap-2">
+                        <button class="btn btn-outline-secondary" type="button" onclick="scrollChatTop()">
+                            <i class="bi bi-arrow-up"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="scrollChatBottom()">
+                            <i class="bi bi-arrow-down"></i>
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-send me-1"></i>Отправить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.glass {
+    backdrop-filter: blur(16px);
+    background: rgba(255,255,255,0.75);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.4);
+}
+.chat-window {
+    max-height: 480px;
+    background: linear-gradient(180deg, rgba(247,248,252,0.9) 0%, rgba(255,255,255,0.95) 40%, rgba(247,248,252,0.9) 100%);
+}
+.message-bubble {
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.message-bubble:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+</style>
+
+<script>
+function scrollChatBottom() {
+    const box = document.querySelector(".chat-window");
+    if (box) box.scrollTop = box.scrollHeight;
+}
+function scrollChatTop() {
+    const box = document.querySelector(".chat-window");
+    if (box) box.scrollTop = 0;
+}
+document.addEventListener("DOMContentLoaded", scrollChatBottom);
+</script>
+{% endblock %}

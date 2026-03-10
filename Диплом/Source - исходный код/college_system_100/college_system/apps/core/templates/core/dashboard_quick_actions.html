@@ -1,0 +1,122 @@
+<div class="mt-5 fade-in-up" data-delay="250">
+    <h5 class="text-muted text-uppercase small mb-3">Быстрые действия</h5>
+    <div class="row g-3">
+        {% if user.role == "teacher" %}
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:my_timesheets' %}" class="quick-link-card">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Мои табели</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:my_salaries' %}" class="quick-link-card">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Моя зарплата</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:workload_list' %}" class="quick-link-card">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Моя нагрузка</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:feedback_submit' %}" class="quick-link-card">
+                    <i class="bi bi-chat-left-text"></i>
+                    <span>Сообщить идею</span>
+                </a>
+            </div>
+        {% elif user.role == "accountant" %}
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:salary_list' %}" class="quick-link-card">
+                    <i class="bi bi-currency-exchange"></i>
+                    <span>Ведомости</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:salary_create' %}" class="quick-link-card">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Начислить зарплату</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:timesheet_list' %}" class="quick-link-card">
+                    <i class="bi bi-calendar-week"></i>
+                    <span>Табели</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:workload_list' %}" class="quick-link-card">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Нагрузка (просмотр)</span>
+                </a>
+            </div>
+        {% elif user.role == "curator" %}
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:teacher_list' %}" class="quick-link-card">
+                    <i class="bi bi-people"></i>
+                    <span>Преподаватели</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:subject_list' %}" class="quick-link-card">
+                    <i class="bi bi-journal-bookmark"></i>
+                    <span>Предметы</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:group_list' %}" class="quick-link-card">
+                    <i class="bi bi-collection"></i>
+                    <span>Группы</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:workload_create' %}" class="quick-link-card">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Добавить нагрузку</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:salary_list' %}" class="quick-link-card">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Зарплаты (просмотр)</span>
+                </a>
+            </div>
+        {% else %}
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:teacher_create' %}" class="quick-link-card">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Новый преподаватель</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:group_list' %}" class="quick-link-card">
+                    <i class="bi bi-collection"></i>
+                    <span>Группы</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:feedback_inbox' %}" class="quick-link-card position-relative">
+                    {% if pending_feedback %}
+                        <span class="badge rounded-pill text-bg-danger position-absolute translate-middle top-0 start-100">{{ pending_feedback }}</span>
+                    {% endif %}
+                    <i class="bi bi-inbox"></i>
+                    <span>Сообщения пользователей</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:salary_list' %}" class="quick-link-card">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Зарплаты</span>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="{% url 'core:feedback_submit' %}" class="quick-link-card">
+                    <i class="bi bi-bug"></i>
+                    <span>Отправить идею</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+

@@ -1,0 +1,105 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm nav-blur">
+    <div class="container px-3">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'core:dashboard' %}">
+            <i class="bi bi-mortarboard-fill me-2"></i>
+            <span class="fw-bold">КПСУ 2026</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
+            <ul class="navbar-nav flex-wrap gap-1 me-3 mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:teacher_list' %}"><i class="bi bi-people me-1"></i>Преподаватели</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:subject_list' %}"><i class="bi bi-journal-bookmark me-1"></i>Предметы</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:group_list' %}"><i class="bi bi-collection me-1"></i>Группы</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:workload_list' %}"><i class="bi bi-journal-text me-1"></i>Нагрузка</a></li>
+                    {% if user.role == "teacher" or user.role == "curator" or user.is_superuser %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:workload_calendar' %}"><i class="bi bi-calendar-week me-1"></i>Календарь</a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:timesheet_list' %}"><i class="bi bi-calendar3 me-1"></i>Табели</a></li>
+                    {% if user.role == "teacher" %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:my_salaries' %}"><i class="bi bi-cash-stack me-1"></i>Зарплата</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:salary_list' %}"><i class="bi bi-cash-stack me-1"></i>Зарплата</a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:feedback_submit' %}"><i class="bi bi-chat-left-text me-1"></i>Идея / ошибка</a></li>
+                    {% if user.role != "accountant" %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:chat' %}"><i class="bi bi-chat-dots me-1"></i>Чат</a></li>
+                    {% endif %}
+                    {% if user.is_superuser or user.role == "admin" %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'core:feedback_inbox' %}"><i class="bi bi-inbox me-1"></i>Сообщения</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'authentication:user_list' %}"><i class="bi bi-people-gear me-1"></i>Пользователи</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <button id="themeToggle" class="btn btn-outline-light btn-soft btn-sm">
+                    <i class="bi bi-brightness-high-fill me-1"></i>
+                    <span class="d-none d-md-inline">Тема</span>
+                </button>
+                {% if user.is_authenticated %}
+                    <div class="user-menu-wrapper position-relative ms-1">
+                        <button class="btn btn-light btn-soft btn-sm user-menu-trigger d-flex align-items-center gap-2">
+                            <span class="user-avatar-circle">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <span class="text-start d-none d-sm-inline">
+                                <span class="user-menu-title d-block">Личный кабинет</span>
+                                <span class="user-menu-subtitle">{{ user.get_full_name|default:user.username }}</span>
+                            </span>
+                            <i class="bi bi-chevron-down small d-none d-sm-inline"></i>
+                        </button>
+                        <div class="user-menu-panel glass-surface shadow-soft">
+                            <div class="user-menu-header mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="user-avatar-circle user-avatar-circle-lg">
+                                        <i class="bi bi-person-badge"></i>
+                                    </span>
+                                    <div>
+                                        <div class="fw-semibold small">{{ user.get_full_name|default:user.username }}</div>
+                                        <div class="text-muted extra-small">Личный кабинет</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-menu-body">
+                                <a class="user-menu-item" href="{% url 'authentication:profile' %}">
+                                    <i class="bi bi-person-lines-fill"></i>
+                                    <span>Профиль</span>
+                                </a>
+                                <a class="user-menu-item" href="{% url 'core:my_timesheets' %}">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>Мои табели</span>
+                                </a>
+                                <a class="user-menu-item" href="{% url 'core:my_salaries' %}">
+                                    <i class="bi bi-wallet2"></i>
+                                    <span>Моя зарплата</span>
+                                </a>
+                                <hr class="my-2">
+                                <a class="user-menu-item" href="{% url 'account_change_password' %}">
+                                    <i class="bi bi-key"></i>
+                                    <span>Сменить пароль</span>
+                                </a>
+                                <a class="user-menu-item" href="{% url 'account_reset_password' %}">
+                                    <i class="bi bi-shield-lock"></i>
+                                    <span>Восстановить пароль</span>
+                                </a>
+                            </div>
+                            <div class="user-menu-footer pt-2 mt-1">
+                                <a class="w-100 btn btn-sm btn-outline-danger btn-soft d-flex align-items-center justify-content-center gap-1" href="{% url 'account_logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Выход</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="btn btn-light btn-sm" href="{% url 'account_login' %}">Вход</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+

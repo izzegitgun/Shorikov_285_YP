@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Импорт преподавателей{% endblock %}
+{% block content %}
+<h2 class="mb-3">Импорт преподавателей из Excel</h2>
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Файл Excel</label>
+                <input type="file" name="file" class="form-control" accept=".xlsx,.xls">
+            </div>
+            <button type="submit" class="btn btn-primary">Импортировать</button>
+            <a href="{% url 'core:teacher_list' %}" class="btn btn-outline-secondary">Назад</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
