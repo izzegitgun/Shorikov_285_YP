@@ -243,6 +243,64 @@
   },
   {
     "ContainingType": "ClimaticService.Controllers.RequestsController",
+    "Method": "ExtendDeadline",
+    "RelativePath": "api/Requests/{id}/extend-deadline",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "ClimaticService.DTOs.ExtendDeadlineDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClimaticService.Controllers.RequestsController",
+    "Method": "GetFeedbackQr",
+    "RelativePath": "api/Requests/{id}/feedback-qr",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClimaticService.Controllers.RequestsController",
+    "Method": "RequestQualityHelp",
+    "RelativePath": "api/Requests/{id}/quality-help",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "ClimaticService.DTOs.RequestQualityHelpDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClimaticService.Controllers.RequestsController",
     "Method": "UpdateStatus",
     "RelativePath": "api/Requests/{id}/status/{statusId}",
     "HttpMethod": "POST",

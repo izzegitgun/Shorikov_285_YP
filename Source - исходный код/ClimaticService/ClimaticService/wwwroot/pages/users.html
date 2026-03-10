@@ -17,8 +17,9 @@
 
     <main class="container">
         <h1 class="mb-4">Пользователи</h1>
-        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Список зарегистрированных пользователей.</p>
+        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Список зарегистрированных пользователей. Редактирование и удаление доступны только менеджерам.</p>
 
+        <!-- Поиск по имени/логину и фильтр по роли -->
         <div class="filters">
             <div class="filter-group">
                 <label>Поиск по имени или логину</label>
@@ -36,6 +37,7 @@
             </div>
         </div>
 
+        <!-- Таблица пользователей -->
         <div class="table-container">
             <table>
                 <thead>
@@ -55,7 +57,7 @@
         </div>
     </main>
 
-    <!-- Модальное окно редактирования (только для менеджеров) -->
+    <!-- Модальное окно: редактирование пользователя -->
     <div id="editModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
         <div class="modal">
             <div class="modal-header">
@@ -97,7 +99,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно удаления (только для менеджеров) -->
+    <!-- Модальное окно: подтверждение удаления -->
     <div id="deleteModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
         <div class="modal">
             <div class="modal-header">
@@ -116,7 +118,8 @@
     <script src="/js/auth.js"></script>
     <script src="/js/users.js"></script>
     <script>
-        (function () {
+        (function() {
+            // Доступ: только Менеджер, Менеджер по качеству, Специалист
             const currentUser = Auth.getCurrentUser();
             const allowedRoles = ['Менеджер', 'Менеджер по качеству', 'Специалист'];
             if (!currentUser || !allowedRoles.includes(currentUser.type)) {
@@ -124,8 +127,7 @@
                 return;
             }
 
-            const isManager = Auth.isManager(); // Менеджер или Менеджер по качеству
-            const isSpecialist = currentUser.type === 'Специалист';
+            const canEditAndDelete = () => Auth.isManager();
 
             let allUsers = [];
             let deleteTargetId = null;
@@ -155,46 +157,37 @@
 
             function renderTable(users) {
                 const tbody = document.getElementById('usersBody');
+                const showActions = canEditAndDelete();
 
                 if (users.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2.5rem;">Пользователи не найдены</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = users.map(u => {
-                    const registrationDate = u.registrationDate ? Formatter.date(u.registrationDate) : '—';
+                tbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${escapeHtml(u.fio)}</td>
+                        <td>${escapeHtml(u.login || '—')}</td>
+                        <td>${escapeHtml(u.phone || '—')}</td>
+                        <td>${escapeHtml(u.type)}</td>
+                        <td>—</td>
+                        ${showActions ? `
+                            <td onclick="event.stopPropagation()">
+                                <button type="button" class="btn btn-sm btn-secondary" data-action="edit" data-id="${u.userId}">Редактировать</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-action="delete" data-id="${u.userId}">Удалить</button>
+                            </td>
+                        ` : '<td>—</td>'}
+                    </tr>
+                `).join('');
 
-                    // Для специалистов показываем только просмотр
-                    if (isSpecialist) {
-                        return `
-                                <tr>
-                                    <td>${escapeHtml(u.fio)}</td>
-                                    <td>${escapeHtml(u.login || '—')}</td>
-                                    <td>${escapeHtml(u.phone || '—')}</td>
-                                    <td>${escapeHtml(u.type)}</td>
-                                    <td>${registrationDate}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-secondary" onclick="viewUser(${u.userId})">Просмотр</button>
-                                    </td>
-                                </tr>
-                            `;
-                    }
-
-                    // Для менеджеров показываем полное управление
-                    return `
-                            <tr>
-                                <td>${escapeHtml(u.fio)}</td>
-                                <td>${escapeHtml(u.login || '—')}</td>
-                                <td>${escapeHtml(u.phone || '—')}</td>
-                                <td>${escapeHtml(u.type)}</td>
-                                <td>${registrationDate}</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="openEditModal(${u.userId})">✎</button>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="openDeleteModal(${u.userId})">🗑</button>
-                                </td>
-                            </tr>
-                        `;
-                }).join('');
+                if (showActions) {
+                    tbody.querySelectorAll('[data-action="edit"]').forEach(btn => {
+                        btn.onclick = () => openEditModal(Number(btn.dataset.id));
+                    });
+                    tbody.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                        btn.onclick = () => openDeleteModal(Number(btn.dataset.id));
+                    });
+                }
             }
 
             function escapeHtml(s) {
@@ -204,34 +197,19 @@
                 return div.innerHTML;
             }
 
-            // Просмотр пользователя (для специалистов)
-            window.viewUser = function (userId) {
+            // Редактирование: открыть форму с текущими данными
+            function openEditModal(userId) {
                 const user = allUsers.find(u => u.userId === userId);
                 if (!user) return;
-
-                const info = `
-                        ФИО: ${user.fio}
-                        Логин: ${user.login || '—'}
-                        Телефон: ${user.phone || '—'}
-                        Роль: ${user.type}
-                    `;
-                NotificationManager.info(info);
-            };
-
-            // Редактирование (только для менеджеров)
-            window.openEditModal = function (userId) {
-                if (!isManager) return;
-                const user = allUsers.find(u => u.userId === userId);
-                if (!user) return;
-
                 document.getElementById('editUserId').value = user.userId;
                 document.getElementById('editFio').value = user.fio;
                 document.getElementById('editLogin').value = user.login || '';
                 document.getElementById('editPhone').value = user.phone || '';
                 document.getElementById('editPassword').value = '';
+                document.getElementById('editPassword').placeholder = 'Оставьте пустым, чтобы не менять';
                 document.getElementById('editType').value = user.type || 'Заказчик';
                 document.getElementById('editModal').style.display = 'flex';
-            };
+            }
 
             function closeEditModal() {
                 document.getElementById('editModal').style.display = 'none';
@@ -239,18 +217,15 @@
 
             document.getElementById('editModalClose').onclick = closeEditModal;
             document.getElementById('editModalCancel').onclick = closeEditModal;
-            document.getElementById('editModal').onclick = function (e) {
+            document.getElementById('editModal').onclick = function(e) {
                 if (e.target === this) closeEditModal();
             };
 
-            document.getElementById('editUserForm').onsubmit = async function (e) {
+            document.getElementById('editUserForm').onsubmit = async function(e) {
                 e.preventDefault();
-                if (!isManager) return;
-
                 const id = Number(document.getElementById('editUserId').value);
                 const btn = document.getElementById('editSubmitBtn');
                 btn.disabled = true;
-
                 try {
                     await UsersAPI.update(id, {
                         fio: document.getElementById('editFio').value.trim(),
@@ -268,15 +243,13 @@
                 btn.disabled = false;
             };
 
-            // Удаление (только для менеджеров)
-            window.openDeleteModal = function (userId) {
-                if (!isManager) return;
-
+            // Удаление: модальное подтверждение
+            function openDeleteModal(userId) {
                 deleteTargetId = userId;
                 const user = allUsers.find(u => u.userId === userId);
                 document.getElementById('deleteUserName').textContent = user ? user.fio : '№' + userId;
                 document.getElementById('deleteModal').style.display = 'flex';
-            };
+            }
 
             function closeDeleteModal() {
                 document.getElementById('deleteModal').style.display = 'none';
@@ -285,13 +258,12 @@
 
             document.getElementById('deleteModalClose').onclick = closeDeleteModal;
             document.getElementById('deleteModalCancel').onclick = closeDeleteModal;
-            document.getElementById('deleteModal').onclick = function (e) {
+            document.getElementById('deleteModal').onclick = function(e) {
                 if (e.target === this) closeDeleteModal();
             };
 
-            document.getElementById('deleteConfirmBtn').onclick = async function () {
-                if (!isManager || deleteTargetId == null) return;
-
+            document.getElementById('deleteConfirmBtn').onclick = async function() {
+                if (deleteTargetId == null) return;
                 this.disabled = true;
                 try {
                     await UsersAPI.delete(deleteTargetId);
@@ -304,6 +276,7 @@
                 this.disabled = false;
             };
 
+            // События фильтров
             document.getElementById('searchInput').addEventListener('input', () => applyFilters());
             document.getElementById('roleFilter').addEventListener('change', () => applyFilters());
 

@@ -21,6 +21,7 @@ namespace ClimaticService.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Добавляем конвертеры для DateTime
             var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
                 v => v.ToUniversalTime(),
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
@@ -29,6 +30,7 @@ namespace ClimaticService.Data
                 v => v.HasValue ? v.Value.ToUniversalTime() : v,
                 v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
 
+            // Применяем конвертеры ко всем свойствам DateTime
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties())

@@ -17,5 +17,7 @@ namespace ClimaticService.Services
         Task<IEnumerable<Comment>> GetCommentsAsync(int requestId);
         Task<object> GetStatisticsAsync();
         Task<bool> NotifyClientAsync(int requestId, string message);
+        Task<Request?> ExtendDeadlineAsync(int requestId, ExtendDeadlineDto dto);
+        Task<Request?> RequestQualityHelpAsync(int requestId, RequestQualityHelpDto dto);
     }
 }

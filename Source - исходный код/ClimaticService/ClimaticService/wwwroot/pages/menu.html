@@ -22,20 +22,11 @@
     </nav>
 
     <main class="container">
-        <!-- Статистика только для менеджеров -->
-        <div id="managerStats" style="display: none;">
-            <div class="stats-grid" id="statsContainer"></div>
-        </div>
-
-        <!-- Информация для клиентов -->
-        <div id="clientInfo" class="card mb-4 slide-up" style="display: none;">
-            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-                <div style="font-size: 3rem;">🌡️</div>
-                <div>
-                    <h2 style="margin-bottom: 0.5rem;">Добро пожаловать в ClimaticService!</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Мы профессионально занимаемся ремонтом климатической техники с 2010 года.</p>
-                    <p style="color: var(--text-muted);">✓ Бесплатная диагностика ✓ Гарантия на работы ✓ Опытные мастера</p>
-                </div>
+        <div class="stats-grid" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-value">—</div>
+                <div class="stat-label">загрузка…</div>
             </div>
         </div>
 
@@ -44,14 +35,27 @@
             <p style="color: var(--text-muted); margin: 0;">Выберите нужный раздел для работы</p>
         </div>
 
-        <!-- Динамическое меню в зависимости от роли -->
         <div class="menu-grid" id="menuContainer"></div>
+
+        <div class="stats-grid mt-4" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+            <div class="stat-card" id="quickNewRequestCard" onclick="window.location.href='/pages/create-request.html'">
+                <div class="stat-icon">✎</div>
+                <div class="stat-label">Новая заявка</div>
+            </div>
+            <div class="stat-card" id="quickAllRequestsCard" onclick="window.location.href='/pages/requests.html'">
+                <div class="stat-icon">📋</div>
+                <div class="stat-label">Все заявки</div>
+            </div>
+            <div class="stat-card" id="quickLogoutCard" onclick="Auth.logout()">
+                <div class="stat-icon">←</div>
+                <div class="stat-label">Выход</div>
+            </div>
+        </div>
     </main>
 
     <script src="/js/utils.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/requests.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         class MenuPage {
             static async init() {
@@ -59,15 +63,14 @@
                 if (!this.user) return;
 
                 this.renderUserInfo();
-
-                // Показываем разные секции в зависимости от роли
-                if (this.user.type === 'Менеджер' || this.user.type === 'Менеджер по качеству') {
-                    document.getElementById('managerStats').style.display = 'block';
+                // Панель статистики показываем только не для заказчика
+                if (this.user.type !== 'Заказчик') {
                     await this.loadStatistics();
-                } else if (this.user.type === 'Заказчик') {
-                    document.getElementById('clientInfo').style.display = 'block';
+                    document.getElementById('statsContainer').style.display = '';
+                } else {
+                    const stats = document.getElementById('statsContainer');
+                    if (stats) stats.style.display = 'none';
                 }
-
                 this.renderMenu();
             }
 
@@ -75,8 +78,6 @@
                 document.getElementById('userName').textContent = this.user.fio.split(' ')[0];
                 document.getElementById('userType').textContent = this.user.type;
                 document.getElementById('welcomeMessage').textContent = 'Добро пожаловать, ' + this.user.fio.split(' ')[0];
-
-                document.getElementById('logoutBtn').onclick = () => Auth.logout();
             }
 
             static async loadStatistics() {
@@ -88,68 +89,71 @@
                         { icon: '⚙️', value: stats.inProgressRequests || 0, label: 'в работе' },
                         { icon: '✅', value: stats.completedRequests || 0, label: 'завершено' }
                     ].map(item => `
-                            <div class="stat-card" onclick="window.location.href='/pages/statistics.html'">
-                                <div class="stat-icon">${item.icon}</div>
-                                <div class="stat-value">${item.value}</div>
-                                <div class="stat-label">${item.label}</div>
-                            </div>
-                        `).join('');
+                        <div class="stat-card">
+                            <div class="stat-icon">${item.icon}</div>
+                            <div class="stat-value">${item.value}</div>
+                            <div class="stat-label">${item.label}</div>
+                        </div>
+                    `).join('');
                 } catch (e) { console.error(e); }
             }
 
             static renderMenu() {
+                const role = this.user.type;
                 let menuItems = [];
 
-                // Меню для разных ролей
-                switch (this.user.type) {
-                    case 'Заказчик':
-                        menuItems = [
-                            { icon: '📝', title: 'Мои заявки', description: 'Просмотр статуса ваших заявок', link: '/pages/my-requests.html' },
-                            { icon: '✎', title: 'Новая заявка', description: 'Создать заявку на ремонт', link: '/pages/create-request.html' },
-                            { icon: 'ℹ️', title: 'О сервисе', description: 'Информация о нашей компании', link: '#', action: 'showAbout' }
-                        ];
-                        break;
-
-                    case 'Специалист':
-                        menuItems = [
-                            { icon: '🔧', title: 'Мои задания', description: 'Заявки, назначенные вам', link: '/pages/my-tasks.html' },
-                            { icon: '📋', title: 'Все заявки', description: 'Просмотр всех заявок', link: '/pages/requests.html' },
-                            { icon: '👥', title: 'Пользователи', description: 'Список пользователей системы', link: '/pages/users.html' }
-                        ];
-                        break;
-
-                    case 'Менеджер':
-                    case 'Менеджер по качеству':
-                        menuItems = [
-                            { icon: '📋', title: 'Все заявки', description: 'Управление всеми заявками', link: '/pages/requests.html' },
-                            { icon: '📊', title: 'Статистика', description: 'Аналитика и графики', link: '/pages/statistics.html' },
-                            { icon: '👥', title: 'Пользователи', description: 'Управление пользователями', link: '/pages/users.html' },
-                            { icon: '📝', title: 'Мои заявки', description: 'Заявки, где вы участвуете', link: '/pages/my-requests.html' }
-                        ];
-                        break;
+                // Менеджер / менеджер по качеству — админские возможности
+                if (role === 'Менеджер' || role === 'Менеджер по качеству') {
+                    menuItems = [
+                        { icon: '📋', title: 'Все заявки', description: 'Просмотр и управление всеми заявками', link: '/pages/requests.html' },
+                        { icon: '✎', title: 'Создать заявку', description: 'Создать заявку от лица клиента', link: '/pages/create-request.html' },
+                        { icon: '🔍', title: 'Поиск заявок', description: 'Поиск по параметрам и фильтрам', link: '/pages/requests.html' },
+                        { icon: '📊', title: 'Статистика', description: 'Аналитика работы сервисной службы', link: '/pages/statistics.html' },
+                        { icon: '👥', title: 'Пользователи', description: 'Управление пользователями системы', link: '/pages/users.html' }
+                    ];
+                }
+                // Специалист — свои задания + возможность создать заявку от своего имени
+                else if (role === 'Специалист') {
+                    menuItems = [
+                        { icon: '🔧', title: 'Мои задания', description: 'Заявки, назначенные вам на ремонт', link: '/pages/my-tasks.html' },
+                        { icon: '✎', title: 'Новая заявка', description: 'Создать заявку от своего имени', link: '/pages/create-request.html' }
+                    ];
+                }
+                // Заказчик — только свои заявки и подача новой
+                else if (role === 'Заказчик') {
+                    menuItems = [
+                        { icon: '📝', title: 'Мои заявки', description: 'История и статус ваших заявок', link: '/pages/my-requests.html' },
+                        { icon: '✎', title: 'Новая заявка', description: 'Оставить заявку на ремонт', link: '/pages/create-request.html' }
+                    ];
+                }
+                // Оператор или другие — упрощённое меню
+                else if (role === 'Оператор') {
+                    menuItems = [
+                        { icon: '✎', title: 'Создать заявку', description: 'Оформление заявок от клиентов', link: '/pages/create-request.html' },
+                        { icon: '📋', title: 'Все заявки', description: 'Просмотр всех заявок', link: '/pages/requests.html' }
+                    ];
                 }
 
                 document.getElementById('menuContainer').innerHTML = menuItems.map(item => `
-                        <div class="menu-card" onclick="${item.action ? `${item.action}()` : `window.location.href='${item.link}'`}">
-                            <div class="menu-icon">${item.icon}</div>
-                            <h3 class="menu-title">${item.title}</h3>
-                            <p class="menu-description">${item.description}</p>
-                        </div>
-                    `).join('');
-            }
+                    <div class="menu-card" onclick="window.location.href='${item.link}'">
+                        <div class="menu-icon">${item.icon}</div>
+                        <h3 class="menu-title">${item.title}</h3>
+                        <p class="menu-description">${item.description}</p>
+                    </div>
+                `).join('');
 
-            static showAbout() {
-                NotificationManager.info(
-                    'ClimaticService - сервисный центр по ремонту климатической техники\n' +
-                    '☎️ Телефон: +7 (999) 123-45-67\n' +
-                    '📍 Адрес: г. Москва, ул. Примерная, д. 123\n' +
-                    '⏰ Режим работы: Пн-Пт 9:00-20:00, Сб 10:00-18:00'
-                );
+                // Быстрые карточки внизу: скрываем "Все заявки" для заказчика
+                const quickAll = document.getElementById('quickAllRequestsCard');
+                if (quickAll) {
+                    if (role === 'Заказчик') {
+                        quickAll.style.display = 'none';
+                    } else {
+                        quickAll.style.display = '';
+                    }
+                }
             }
         }
-
         document.addEventListener('DOMContentLoaded', () => MenuPage.init());
-        window.showAbout = () => MenuPage.showAbout();
     </script>
 </body>
 </html>

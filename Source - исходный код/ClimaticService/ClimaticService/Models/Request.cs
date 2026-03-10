@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClimaticService.Models
@@ -31,6 +31,9 @@ namespace ClimaticService.Models
         [Required]
         public int StatusId { get; set; }
 
+        [Column("planned_completion_date")]
+        public DateTime? PlannedCompletionDate { get; set; }
+
         [Column("completion_date")]
         public DateTime? CompletionDate { get; set; }
 
@@ -49,6 +52,15 @@ namespace ClimaticService.Models
 
         [Column("deadline_extended")]
         public bool DeadlineExtended { get; set; }
+
+        [Column("technician_problem_description")]
+        public string? TechnicianProblemDescription { get; set; }
+
+        [Column("quality_manager_comment")]
+        public string? QualityManagerComment { get; set; }
+
+        [Column("customer_approval_note")]
+        public string? CustomerApprovalNote { get; set; }
 
         [ForeignKey("TypeId")]
         public ClimateTechType? EquipmentType { get; set; }

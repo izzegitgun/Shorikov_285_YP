@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClimaticService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+23e4b113f55aec88a4bc610e1dc6e6aaad6c51f0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClimaticService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClimaticService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

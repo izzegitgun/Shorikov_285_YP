@@ -1,75 +1,75 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\css\\style.css",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\css\\style.css",
       "PackagePath": "staticwebassets\\css\\style.css"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\index.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\auth.js",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\auth.js",
       "PackagePath": "staticwebassets\\js\\auth.js"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\requests.js",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\requests.js",
       "PackagePath": "staticwebassets\\js\\requests.js"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\users.js",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\users.js",
       "PackagePath": "staticwebassets\\js\\users.js"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\utils.js",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\utils.js",
       "PackagePath": "staticwebassets\\js\\utils.js"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\login.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\login.html",
       "PackagePath": "staticwebassets\\login.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\assign-master.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\assign-master.html",
       "PackagePath": "staticwebassets\\pages\\assign-master.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\create-request.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\create-request.html",
       "PackagePath": "staticwebassets\\pages\\create-request.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\edit-request.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\edit-request.html",
       "PackagePath": "staticwebassets\\pages\\edit-request.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\menu.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\menu.html",
       "PackagePath": "staticwebassets\\pages\\menu.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-requests.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-requests.html",
       "PackagePath": "staticwebassets\\pages\\my-requests.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-tasks.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-tasks.html",
       "PackagePath": "staticwebassets\\pages\\my-tasks.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\request-detail.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\request-detail.html",
       "PackagePath": "staticwebassets\\pages\\request-detail.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\requests.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\requests.html",
       "PackagePath": "staticwebassets\\pages\\requests.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\statistics.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\statistics.html",
       "PackagePath": "staticwebassets\\pages\\statistics.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\users.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\users.html",
       "PackagePath": "staticwebassets\\pages\\users.html"
     },
     {
-      "Id": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\register.html",
+      "Id": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\register.html",
       "PackagePath": "staticwebassets\\register.html"
     },
     {

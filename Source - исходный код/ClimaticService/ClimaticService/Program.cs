@@ -1,4 +1,4 @@
-﻿using ClimaticService.Data;
+using ClimaticService.Data;
 using ClimaticService.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
@@ -10,17 +10,22 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Включаем поддержку локальных временных меток для Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Регистрируем сервисы
 builder.Services.AddScoped<IRequestService, RequestService>();
+builder.Services.AddScoped<FeedbackQrCodeService>();
 
+// Подключение к БД
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>

@@ -15,47 +15,31 @@
         <button type="button" class="btn btn-secondary btn-sm" onclick="window.history.back()">← Назад</button>
     </nav>
 
-    <main class="container" style="max-width: 600px;">
+    <main class="container" style="max-width: 560px;">
         <div class="card slide-up">
-            <h1 class="mb-4">Редактирование заявки #<span id="requestIdSpan"></span></h1>
+            <h1 class="mb-4">Редактирование заявки</h1>
 
-            <form id="editForm">
-                <!-- Статус (доступен всем) -->
+            <form id="editForm" onsubmit="handleSubmit(event)">
                 <div class="form-group">
                     <label class="form-label">Статус</label>
                     <select class="form-control" id="statusId"></select>
                 </div>
 
-                <!-- Дата создания (только для менеджеров) -->
-                <div class="form-group" id="startDateGroup" style="display: none;">
-                    <label class="form-label">Дата создания заявки</label>
-                    <input type="datetime-local" class="form-control" id="startDate">
-                </div>
-
-                <!-- Описание проблемы (доступно всем) -->
                 <div class="form-group">
                     <label class="form-label">Описание проблемы</label>
                     <textarea class="form-control" id="problemDescription" rows="4"></textarea>
                 </div>
 
-                <!-- Мастер (только для менеджеров) -->
-                <div class="form-group" id="masterGroup" style="display: none;">
+                <div class="form-group">
                     <label class="form-label">Мастер</label>
                     <select class="form-control" id="masterId">
                         <option value="">не назначен</option>
                     </select>
                 </div>
 
-                <!-- Комплектующие (доступно всем) -->
                 <div class="form-group">
                     <label class="form-label">Комплектующие</label>
                     <textarea class="form-control" id="repairParts" rows="2" placeholder="Использованные запчасти…"></textarea>
-                </div>
-
-                <!-- Дата завершения (для статуса "Завершена") -->
-                <div class="form-group" id="completionDateGroup" style="display: none;">
-                    <label class="form-label">Дата завершения</label>
-                    <input type="datetime-local" class="form-control" id="completionDate">
                 </div>
 
                 <div class="flex gap-2" style="margin-top: 2rem;">
@@ -73,30 +57,21 @@
     <script src="/js/utils.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/requests.js"></script>
-    <script>
-        const requestId = new URLSearchParams(window.location.search).get('id');
-        const user = Auth.getCurrentUser();
-        const isManager = Auth.isManager();
+    <script>const requestId = new URLSearchParams(window.location.search).get('id');
+        let request = null;
 
         if (!requestId) {
             NotificationManager.error('ID заявки не указан');
             setTimeout(() => window.location.href = '/pages/requests.html', 1000);
         }
 
-        document.getElementById('requestIdSpan').textContent = requestId;
-
-        // Показываем дополнительные поля для менеджеров
-        if (isManager) {
-            document.getElementById('startDateGroup').style.display = 'block';
-            document.getElementById('masterGroup').style.display = 'block';
-        }
-
-        // Загружаем данные
+        // Загружаем статусы
         Promise.all([
             RequestsAPI.getStatuses(),
             RequestsAPI.getById(requestId),
-            isManager ? fetch(`${API_BASE}/Auth/masters`).then(r => r.json()) : []
+            Auth.isManager() ? fetch(`${API_BASE}/Auth/masters`).then(r => r.json()) : []
         ]).then(([statuses, req, masters]) => {
+            request = req;
 
             // Статусы
             const statusSelect = document.getElementById('statusId');
@@ -104,62 +79,23 @@
                 statusSelect.innerHTML += `<option value="${s.statusId}" ${s.statusId === req.statusId ? 'selected' : ''}>${s.statusName}</option>`;
             });
 
-            // Дата создания (для менеджеров)
-            if (isManager && req.startDate) {
-                const startDate = new Date(req.startDate);
-                const localStartDate = new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000))
-                    .toISOString()
-                    .slice(0, 16);
-                document.getElementById('startDate').value = localStartDate;
-            }
-
             // Мастера (только для менеджеров)
-            if (isManager) {
+            if (Auth.isManager()) {
                 const masterSelect = document.getElementById('masterId');
                 masterSelect.innerHTML = '<option value="">не назначен</option>';
                 masters.forEach(m => {
                     masterSelect.innerHTML += `<option value="${m.userId}" ${m.userId === req.masterId ? 'selected' : ''}>${m.fio}</option>`;
                 });
+            } else {
+                document.getElementById('masterId').parentElement.style.display = 'none';
             }
 
             // Заполняем остальные поля
             document.getElementById('problemDescription').value = req.problemDescription || '';
             document.getElementById('repairParts').value = req.repairParts || '';
-
-            // Дата завершения
-            if (req.completionDate) {
-                const date = new Date(req.completionDate);
-                const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
-                    .toISOString()
-                    .slice(0, 16);
-                document.getElementById('completionDate').value = localDate;
-            }
-
-            // Показываем поле даты завершения если статус "Завершена"
-            if (req.statusId === 4) {
-                document.getElementById('completionDateGroup').style.display = 'block';
-            }
-
-            // Обработчик изменения статуса
-            statusSelect.addEventListener('change', function () {
-                const completionGroup = document.getElementById('completionDateGroup');
-                if (this.value === '4') {
-                    completionGroup.style.display = 'block';
-                    if (!document.getElementById('completionDate').value) {
-                        const now = new Date();
-                        const localNow = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
-                            .toISOString()
-                            .slice(0, 16);
-                        document.getElementById('completionDate').value = localNow;
-                    }
-                } else {
-                    completionGroup.style.display = 'none';
-                }
-            });
         });
 
-        // Обработка отправки формы
-        document.getElementById('editForm').addEventListener('submit', async function (e) {
+        async function handleSubmit(e) {
             e.preventDefault();
 
             const btn = document.getElementById('submitBtn');
@@ -171,24 +107,10 @@
                 repairParts: document.getElementById('repairParts').value || null
             };
 
-            // Добавляем дату создания для менеджеров
-            if (isManager) {
-                const startDate = document.getElementById('startDate').value;
-                if (startDate) {
-                    updateData.startDate = new Date(startDate).toISOString();
-                }
-
+            if (Auth.isManager()) {
                 const masterId = document.getElementById('masterId').value;
                 if (masterId) {
                     updateData.masterId = parseInt(masterId);
-                }
-            }
-
-            // Добавляем дату завершения если статус "Завершена"
-            if (updateData.statusId === 4) {
-                const completionDate = document.getElementById('completionDate').value;
-                if (completionDate) {
-                    updateData.completionDate = new Date(completionDate).toISOString();
                 }
             }
 
@@ -200,7 +122,6 @@
                 NotificationManager.error(error.message);
                 btn.disabled = false;
             }
-        });
-    </script>
+        }</script>
 </body>
 </html>

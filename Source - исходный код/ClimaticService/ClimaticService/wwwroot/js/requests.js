@@ -102,6 +102,26 @@ const RequestsAPI = {
         return response.json();
     },
 
+    async requestQualityHelp(id, data) {
+        const response = await fetch(`${API_BASE}/Requests/${id}/quality-help`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        await ErrorHandler.handle(response);
+        return response.json();
+    },
+
+    async extendDeadline(id, data) {
+        const response = await fetch(`${API_BASE}/Requests/${id}/extend-deadline`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        await ErrorHandler.handle(response);
+        return response.json();
+    },
+
     // ===== ПОИСК =====
     async search(params) {
         const response = await fetch(`${API_BASE}/Requests/search`, {
@@ -162,7 +182,7 @@ const RequestRenderer = {
                 ${actions ? `
                     <td onclick="event.stopPropagation()">
                         <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/edit-request.html?id=${request.requestId}'" title="редактировать">✎</button>
+                            <button class="btn btn-sm" onclick="window.location.href='/pages/edit-request.html?id=${request.requestId}'" title="редактировать">✎</button>
                             ${showDelete ? `<button class="btn btn-sm btn-danger" onclick="window.deleteRequestConfirm(${request.requestId}, this)" title="удалить">🗑</button>` : ''}
                         </div>
                     </td>

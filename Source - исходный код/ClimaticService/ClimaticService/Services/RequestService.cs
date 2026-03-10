@@ -2,6 +2,7 @@ using ClimaticService.Data;
 using ClimaticService.DTOs;
 using ClimaticService.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace ClimaticService.Services
 {
@@ -41,8 +42,7 @@ namespace ClimaticService.Services
         {
             var request = new Request
             {
-                // Используем UtcNow вместо Now
-                StartDate = DateTime.UtcNow,
+                StartDate = DateTime.Now,
                 TypeId = dto.TypeId,
                 Model = dto.Model,
                 ProblemDescription = dto.ProblemDescription,
@@ -67,6 +67,7 @@ namespace ClimaticService.Services
 
             var oldStatusId = request.StatusId;
 
+            // Исправляем: проверяем не через HasValue, а через сравнение с null
             if (dto.StatusId != null)
                 request.StatusId = dto.StatusId.Value;
 
@@ -80,13 +81,11 @@ namespace ClimaticService.Services
                 request.RepairParts = dto.RepairParts;
 
             if (dto.CompletionDate != null)
-                // Конвертируем в UTC если это локальное время
-                request.CompletionDate = dto.CompletionDate.Value.Kind == DateTimeKind.Local
-                    ? dto.CompletionDate.Value.ToUniversalTime()
-                    : dto.CompletionDate.Value;
+                request.CompletionDate = dto.CompletionDate.Value;
 
             await _context.SaveChangesAsync();
 
+            // Если статус изменился, уведомляем клиента
             if (oldStatusId != request.StatusId && request.ClientId > 0)
             {
                 var status = await _context.RequestStatuses.FindAsync(request.StatusId);
@@ -112,9 +111,9 @@ namespace ClimaticService.Services
             if (request == null) return null;
 
             request.MasterId = masterId;
-            if (request.StatusId == 1) 
+            if (request.StatusId == 1) // Если новая заявка, меняем статус на "В работе"
             {
-                request.StatusId = 2;
+                request.StatusId = 2; // ID статуса "В процессе ремонта"
             }
 
             await _context.SaveChangesAsync();
@@ -136,12 +135,12 @@ namespace ClimaticService.Services
 
             if (statusId == 3) // Если статус "Завершена"
             {
-                // Используем UtcNow
-                request.CompletionDate = DateTime.UtcNow;
+                request.CompletionDate = DateTime.Now;
             }
 
             await _context.SaveChangesAsync();
 
+            // Уведомляем клиента
             var status = await _context.RequestStatuses.FindAsync(statusId);
             await NotifyClientAsync(requestId,
                 $"Статус вашей заявки #{requestId} изменен на '{status?.StatusName}'");
@@ -175,11 +174,10 @@ namespace ClimaticService.Services
                 query = query.Where(r => r.TypeId == searchDto.TypeId.Value);
 
             if (searchDto.StartDateFrom != null)
-                // Конвертируем в UTC для поиска
-                query = query.Where(r => r.StartDate >= searchDto.StartDateFrom.Value.ToUniversalTime());
+                query = query.Where(r => r.StartDate >= searchDto.StartDateFrom.Value);
 
             if (searchDto.StartDateTo != null)
-                query = query.Where(r => r.StartDate <= searchDto.StartDateTo.Value.ToUniversalTime());
+                query = query.Where(r => r.StartDate <= searchDto.StartDateTo.Value);
 
             return await query.OrderByDescending(r => r.StartDate).ToListAsync();
         }
@@ -273,6 +271,8 @@ namespace ClimaticService.Services
 
                 _logger.LogInformation($"Уведомление для клиента {request.Client.Fio}: {message}");
 
+                // Здесь можно добавить отправку SMS или Email
+                // Пока просто сохраняем в лог
 
                 return true;
             }
@@ -281,6 +281,78 @@ namespace ClimaticService.Services
                 _logger.LogError(ex, "Ошибка при отправке уведомления клиенту");
                 return false;
             }
+        }
+
+        public async Task<Request?> ExtendDeadlineAsync(int requestId, ExtendDeadlineDto dto)
+        {
+            var request = await _context.Requests.FindAsync(requestId);
+            if (request == null) return null;
+
+            var manager = await _context.Users.FindAsync(dto.QualityManagerId);
+            if (manager == null || manager.Type != "Менеджер по качеству" || manager.IsDeleted)
+            {
+                throw new InvalidOperationException("Указанный пользователь не является менеджером по качеству.");
+            }
+
+            if (request.PlannedCompletionDate != null &&
+                dto.NewPlannedCompletionDate <= request.PlannedCompletionDate.Value)
+            {
+                throw new ArgumentException("Новая дата завершения должна быть позже текущей плановой даты.");
+            }
+
+            request.PlannedCompletionDate = dto.NewPlannedCompletionDate;
+            request.CustomerApprovalNote = dto.CustomerApprovalNote;
+            request.QualityManagerId = manager.UserId;
+            request.DeadlineExtended = true;
+
+            await _context.SaveChangesAsync();
+
+            if (request.ClientId > 0)
+            {
+                await NotifyClientAsync(request.RequestId,
+                    $"Срок выполнения вашей заявки #{request.RequestId} продлён до {request.PlannedCompletionDate:dd.MM.yyyy} " +
+                    $"(согласовано с заказчиком).");
+            }
+
+            return request;
+        }
+
+        public async Task<Request?> RequestQualityHelpAsync(int requestId, RequestQualityHelpDto dto)
+        {
+            var request = await _context.Requests.FindAsync(requestId);
+            if (request == null) return null;
+
+            var technician = await _context.Users.FindAsync(dto.TechnicianId);
+            if (technician == null || technician.Type != "Специалист" || technician.IsDeleted)
+            {
+                throw new InvalidOperationException("Указанный пользователь не является специалистом.");
+            }
+
+            if (request.MasterId != null && request.MasterId != technician.UserId)
+            {
+                throw new InvalidOperationException("Обратиться за помощью может только назначенный на заявку специалист.");
+            }
+
+            var qualityManager = await _context.Users
+                .Where(u => u.Type == "Менеджер по качеству" && !u.IsDeleted)
+                .OrderBy(u => u.UserId)
+                .FirstOrDefaultAsync();
+
+            if (qualityManager == null)
+            {
+                throw new InvalidOperationException("В системе не найден менеджер по качеству.");
+            }
+
+            request.TechnicianProblemDescription = dto.ProblemDescription;
+            request.QualityManagerComment = null;
+            request.QualityManagerId = qualityManager.UserId;
+
+            await _context.SaveChangesAsync();
+
+            await NotifyManagersAsync(
+                $"Специалист {technician.Fio} запросил помощь по заявке #{request.RequestId}: {dto.ProblemDescription}");
+
+            return request;
         }
 
         private async Task NotifyManagersAsync(string message)

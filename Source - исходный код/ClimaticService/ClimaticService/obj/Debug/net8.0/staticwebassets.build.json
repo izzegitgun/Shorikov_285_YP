@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "kJrRMELDU9CfuvPLp77Hzlv6gXoVptvDiqqL+C8kPLE=",
+  "Hash": "Qyb7mRCAy0xSAM7AzPu2a5KMxj/aaL/f6KqvoUmo3Mg=",
   "Source": "ClimaticService",
   "BasePath": "_content/ClimaticService",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "ClimaticService\\wwwroot",
       "Source": "ClimaticService",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\css\\style.css",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\css\\style.css",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "css/style.css",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot\\css\\style.css"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\index.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\index.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -55,10 +55,10 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\auth.js",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\auth.js",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "js/auth.js",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\js\\auth.js"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\requests.js",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\requests.js",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "js/requests.js",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\js\\requests.js"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\users.js",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\users.js",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "js/users.js",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\js\\users.js"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\js\\utils.js",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\js\\utils.js",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "js/utils.js",
       "AssetKind": "All",
@@ -131,10 +131,10 @@
       "OriginalItemSpec": "wwwroot\\js\\utils.js"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\login.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\login.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "login.html",
       "AssetKind": "All",
@@ -150,10 +150,10 @@
       "OriginalItemSpec": "wwwroot\\login.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\assign-master.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\assign-master.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/assign-master.html",
       "AssetKind": "All",
@@ -169,10 +169,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\assign-master.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\create-request.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\create-request.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/create-request.html",
       "AssetKind": "All",
@@ -188,10 +188,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\create-request.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\edit-request.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\edit-request.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/edit-request.html",
       "AssetKind": "All",
@@ -207,10 +207,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\edit-request.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\menu.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\menu.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/menu.html",
       "AssetKind": "All",
@@ -226,10 +226,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\menu.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-requests.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-requests.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/my-requests.html",
       "AssetKind": "All",
@@ -245,10 +245,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\my-requests.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-tasks.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\my-tasks.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/my-tasks.html",
       "AssetKind": "All",
@@ -264,10 +264,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\my-tasks.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\request-detail.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\request-detail.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/request-detail.html",
       "AssetKind": "All",
@@ -283,10 +283,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\request-detail.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\requests.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\requests.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/requests.html",
       "AssetKind": "All",
@@ -302,10 +302,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\requests.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\statistics.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\statistics.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/statistics.html",
       "AssetKind": "All",
@@ -321,10 +321,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\statistics.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\pages\\users.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\pages\\users.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "pages/users.html",
       "AssetKind": "All",
@@ -340,10 +340,10 @@
       "OriginalItemSpec": "wwwroot\\pages\\users.html"
     },
     {
-      "Identity": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\register.html",
+      "Identity": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\register.html",
       "SourceId": "ClimaticService",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\wwwroot\\",
       "BasePath": "_content/ClimaticService",
       "RelativePath": "register.html",
       "AssetKind": "All",

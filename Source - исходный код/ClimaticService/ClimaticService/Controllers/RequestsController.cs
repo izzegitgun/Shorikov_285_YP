@@ -14,15 +14,18 @@ namespace ClimaticService.Controllers
         private readonly IRequestService _requestService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<RequestsController> _logger;
+        private readonly FeedbackQrCodeService _feedbackQrCodeService;
 
         public RequestsController(
             IRequestService requestService,
             ApplicationDbContext context,
-            ILogger<RequestsController> logger)
+            ILogger<RequestsController> logger,
+            FeedbackQrCodeService feedbackQrCodeService)
         {
             _requestService = requestService;
             _context = context;
             _logger = logger;
+            _feedbackQrCodeService = feedbackQrCodeService;
         }
 
         // GET: api/requests
@@ -179,6 +182,52 @@ namespace ClimaticService.Controllers
         {
             var statistics = await _requestService.GetStatisticsAsync();
             return Ok(statistics);
+        }
+
+        // POST: api/requests/{id}/extend-deadline
+        [HttpPost("{id}/extend-deadline")]
+        public async Task<IActionResult> ExtendDeadline(int id, [FromBody] ExtendDeadlineDto dto)
+        {
+            try
+            {
+                var request = await _requestService.ExtendDeadlineAsync(id, dto);
+                if (request == null)
+                    return NotFound(new { message = $"Заявка с ID {id} не найдена" });
+
+                return Ok(new { message = "Срок выполнения заявки продлён", request });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при продлении срока выполнения заявки");
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // POST: api/requests/{id}/quality-help
+        [HttpPost("{id}/quality-help")]
+        public async Task<IActionResult> RequestQualityHelp(int id, [FromBody] RequestQualityHelpDto dto)
+        {
+            try
+            {
+                var request = await _requestService.RequestQualityHelpAsync(id, dto);
+                if (request == null)
+                    return NotFound(new { message = $"Заявка с ID {id} не найдена" });
+
+                return Ok(new { message = "Запрос на помощь менеджера по качеству отправлен", request });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при запросе помощи менеджера по качеству");
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // GET: api/requests/{id}/feedback-qr
+        [HttpGet("{id}/feedback-qr")]
+        public IActionResult GetFeedbackQr(int id)
+        {
+            var bytes = _feedbackQrCodeService.GenerateFeedbackQrCode(id);
+            return File(bytes, "image/png");
         }
     }
 }

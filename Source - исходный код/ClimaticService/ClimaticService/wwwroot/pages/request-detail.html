@@ -65,34 +65,34 @@
                 </div>
             </div>
 
-            <!-- Блок быстрого изменения статуса для специалистов -->
-            <div id="quickStatusSection" class="card mb-4" style="display: none;">
-                <h3 class="section-title">Быстрое изменение статуса</h3>
-                <div class="flex gap-2">
-                    <button type="button" class="btn btn-secondary" onclick="window.page.changeStatus(2)">В работу</button>
-                    <button type="button" class="btn btn-warning" onclick="window.page.changeStatus(3)">Ожидание запчастей</button>
-                    <button type="button" class="btn btn-success" onclick="window.page.complete()">Завершить</button>
-                </div>
-            </div>
-
-            <!-- Блок редактирования комплектующих для специалистов -->
-            <div id="editPartsSection" class="card mb-4" style="display: none;">
-                <h3 class="section-title">Комплектующие</h3>
-                <textarea class="form-control" id="repairPartsEdit" rows="3" placeholder="Введите использованные запчасти..."></textarea>
-                <button type="button" class="btn btn-primary mt-2" onclick="window.page.updateRepairParts()">Сохранить комплектующие</button>
-            </div>
-
             <div class="card">
                 <h3 class="section-title">Комментарии</h3>
                 <div id="commentsList" class="comments-section"></div>
 
-                <div id="addCommentSection" class="mt-4">
+                <div id="addCommentSection" style="display: none;" class="mt-4">
                     <textarea class="form-control" id="commentText" placeholder="Добавить комментарий…" rows="3"></textarea>
-                    <button type="button" class="btn btn-primary btn-sm mt-2" onclick="window.page.addComment()">Отправить</button>
+                    <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addComment()">Отправить</button>
                 </div>
             </div>
 
             <div class="flex gap-2 mt-4" id="actionButtons"></div>
+
+            <!-- Модальное окно с QR-кодом для оценки -->
+            <div id="feedbackModal" class="modal" style="display:none;">
+                <div class="modal-backdrop" onclick="window.page.closeFeedbackModal()"></div>
+                <div class="modal-content">
+                    <h3 class="section-title">Оценка работы сервисной службы</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        Отсканируйте QR-код камерой телефона — откроется форма с опросом о качестве выполненных работ.
+                    </p>
+                    <div style="display:flex; justify-content:center; padding:1rem 0;">
+                        <img id="feedbackQrImage" alt="QR-код для оценки качества" style="width:220px;height:220px;border-radius:var(--radius-md);box-shadow:0 4px 16px rgba(0,0,0,0.12);" />
+                    </div>
+                    <div class="flex justify-end mt-3">
+                        <button type="button" class="btn btn-secondary" onclick="window.page.closeFeedbackModal()">Закрыть</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -122,9 +122,7 @@
                 try {
                     this.request = await RequestsAPI.getById(this.requestId);
                     this.renderRequest();
-                } catch (e) {
-                    NotificationManager.error('Ошибка загрузки заявки');
-                }
+                } catch (e) { NotificationManager.error('Ошибка загрузки заявки'); }
             }
 
             async loadComments() {
@@ -140,13 +138,7 @@
                 document.getElementById('content').style.display = 'block';
 
                 const backBtn = document.getElementById('backToListBtn');
-                if (backBtn) backBtn.onclick = () => {
-                    if (this.user.type === 'Специалист') {
-                        window.location.href = '/pages/my-tasks.html';
-                    } else {
-                        window.location.href = '/pages/requests.html';
-                    }
-                };
+                if (backBtn) backBtn.onclick = () => window.location.href = this.user.type === 'Специалист' ? '/pages/my-tasks.html' : '/pages/requests.html';
 
                 document.getElementById('requestTitle').textContent = 'Заявка #' + req.requestId;
                 document.getElementById('startDate').textContent = Formatter.datetime(req.startDate);
@@ -154,7 +146,7 @@
                 document.getElementById('model').textContent = req.model;
                 document.getElementById('problemDescription').textContent = req.problemDescription;
 
-                const days = Math.ceil((new Date() - new Date(req.startDate)) / (1000 * 60 * 60 * 24));
+                const days = Math.ceil((new Date() - new Date(req.startDate)) / (1000*60*60*24));
                 document.getElementById('daysInWork').textContent = Formatter.days(days);
 
                 document.getElementById('clientInfo').innerHTML = (req.client?.fio || '—') + '<br><small style="color:var(--text-muted)">' + (Formatter.phone(req.client?.phone) || '') + '</small>';
@@ -167,23 +159,9 @@
                 if (req.repairParts) {
                     document.getElementById('repairPartsSection').style.display = 'block';
                     document.getElementById('repairParts').textContent = req.repairParts;
-                    document.getElementById('repairPartsEdit').value = req.repairParts;
                 }
 
                 this.renderActionButtons();
-                this.renderSpecialistSections();
-            }
-
-            renderSpecialistSections() {
-                // Показываем дополнительные секции для специалистов, которым назначена заявка
-                if (this.user.type === 'Специалист' && this.request.masterId === this.user.userId) {
-                    if (this.request.statusId !== 4 && this.request.statusId !== 5) {
-                        document.getElementById('quickStatusSection').style.display = 'block';
-                        document.getElementById('editPartsSection').style.display = 'block';
-                    }
-                }
-                // Комментарии доступны всем
-                document.getElementById('addCommentSection').style.display = 'block';
             }
 
             renderComments(comments) {
@@ -193,51 +171,58 @@
                     return;
                 }
                 container.innerHTML = comments.map(c => `
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <span class="comment-author">${c.author?.fio || 'Специалист'}</span>
-                                <span class="comment-date">${c.createdAt ? Formatter.datetime(c.createdAt) : '—'}</span>
-                            </div>
-                            <div class="comment-text">${c.message}</div>
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">${c.author?.fio || 'Специалист'}</span>
+                            <span class="comment-date">—</span>
                         </div>
-                    `).join('');
+                        <div class="comment-text">${c.message}</div>
+                    </div>
+                `).join('');
             }
 
             renderActionButtons() {
                 const container = document.getElementById('actionButtons');
-                let buttons = [];
+                let html = '';
 
-                // Кнопка редактирования для всех, у кого есть права
-                if (Auth.isManager() || this.user.userId === this.request.clientId ||
-                    (this.user.type === 'Специалист' && this.request.masterId === this.user.userId)) {
-                    buttons.push({
-                        text: 'Редактировать',
-                        action: () => this.edit(),
-                        class: 'btn-secondary'
-                    });
+                // Специалист: управление статусами своей заявки
+                if (this.user.type === 'Специалист' && this.request.masterId === this.user.userId) {
+                    if (this.request.statusId !== 4 && this.request.statusId !== 5) {
+                        document.getElementById('addCommentSection').style.display = 'block';
+                        html += `
+                            <button type="button" class="btn btn-secondary" onclick="window.page.changeStatus(2)">В работу</button>
+                            <button type="button" class="btn btn-secondary" onclick="window.page.changeStatus(3)">Ожидание запчастей</button>
+                            <button type="button" class="btn btn-secondary" onclick="window.page.complete()">Завершить</button>
+                            <button type="button" class="btn btn-secondary" onclick="window.page.requestQualityHelp()">Обратиться к менеджеру по качеству</button>
+                        `;
+                    }
                 }
 
-                // Для менеджеров - назначение мастера
+                // Назначение мастера менеджером
                 if (Auth.isManager() && !this.request.masterId) {
-                    buttons.push({
-                        text: 'Назначить мастера',
-                        action: () => this.assignMaster(),
-                        class: 'btn-primary'
-                    });
+                    html += `<button type="button" class="btn btn-secondary" onclick="window.page.assignMaster()">Назначить мастера</button>`;
                 }
 
-                // Для менеджеров - удаление
+                // Редактирование только для менеджера и назначенного специалиста (клиент не может редактировать)
+                if (Auth.isManager() ||
+                    (this.user.type === 'Специалист' && this.request.masterId === this.user.userId)) {
+                    html += `<button type="button" class="btn btn-secondary" onclick="window.page.edit()">Редактировать</button>`;
+                }
+
+                // Кнопка "Оценить работу" для заказчика по завершённой заявке
+                if (this.user.type === 'Заказчик' &&
+                    this.user.userId === this.request.clientId &&
+                    this.request.statusId === 4) {
+                    html += `<button type="button" class="btn btn-secondary" onclick="window.page.openFeedbackModal()">Оценить работу</button>`;
+                }
+
+                // Дополнительные действия менеджера
                 if (Auth.isManager()) {
-                    buttons.push({
-                        text: 'Удалить заявку',
-                        action: () => this.deleteRequest(),
-                        class: 'btn-danger'
-                    });
+                    html += `<button type="button" class="btn btn-secondary" onclick="window.page.extendDeadline()">Продлить срок</button>`;
+                    html += `<button type="button" class="btn btn-danger" onclick="window.page.deleteRequest()">Удалить заявку</button>`;
                 }
 
-                container.innerHTML = buttons.map(b => `
-                        <button type="button" class="btn ${b.class}" onclick="window.page.${b.action.name}()">${b.text}</button>
-                    `).join('');
+                container.innerHTML = html;
             }
 
             async changeStatus(statusId) {
@@ -245,58 +230,76 @@
                     await RequestsAPI.changeStatus(this.requestId, statusId);
                     NotificationManager.success('Статус обновлён');
                     await this.loadRequest();
-                } catch (e) {
-                    NotificationManager.error(e.message);
-                }
+                } catch (e) { NotificationManager.error(e.message); }
             }
 
             async complete() {
-                const parts = document.getElementById('repairPartsEdit').value;
+                const parts = prompt('Использованные комплектующие (необязательно):');
+                await RequestsAPI.update(this.requestId, { statusId: 4, completionDate: new Date().toISOString(), repairParts: parts || null });
+                await this.loadRequest();
+            }
+
+            async requestQualityHelp() {
+                const description = prompt('Опишите проблему, из-за которой невозможно выполнить ремонт в срок:');
+                if (!description) return;
                 try {
-                    await RequestsAPI.update(this.requestId, {
-                        statusId: 4,
-                        completionDate: new Date().toISOString(),
-                        repairParts: parts || null
+                    await RequestsAPI.requestQualityHelp(this.requestId, {
+                        technicianId: this.user.userId,
+                        problemDescription: description
                     });
-                    NotificationManager.success('Заявка завершена');
+                    NotificationManager.success('Запрос помощи менеджера по качеству отправлен');
+                } catch (e) {
+                    NotificationManager.error(e.message);
+                }
+            }
+
+            async extendDeadline() {
+                const dateInput = prompt('Новая плановая дата завершения (в формате ГГГГ-ММ-ДД):');
+                if (!dateInput) return;
+                const parsedDate = new Date(dateInput);
+                if (isNaN(parsedDate.getTime())) {
+                    NotificationManager.error('Некорректная дата');
+                    return;
+                }
+                const note = prompt('Краткое описание согласования с заказчиком:');
+                try {
+                    await RequestsAPI.extendDeadline(this.requestId, {
+                        qualityManagerId: this.user.userId,
+                        newPlannedCompletionDate: parsedDate.toISOString(),
+                        customerApprovalNote: note || ''
+                    });
+                    NotificationManager.success('Срок выполнения заявки продлён');
                     await this.loadRequest();
                 } catch (e) {
                     NotificationManager.error(e.message);
                 }
             }
 
-            async updateRepairParts() {
-                const parts = document.getElementById('repairPartsEdit').value;
-                try {
-                    await RequestsAPI.update(this.requestId, { repairParts: parts || null });
-                    NotificationManager.success('Комплектующие сохранены');
-                    await this.loadRequest();
-                } catch (e) {
-                    NotificationManager.error(e.message);
-                }
+            openFeedbackModal() {
+                const modal = document.getElementById('feedbackModal');
+                const img = document.getElementById('feedbackQrImage');
+                img.src = `${API_BASE}/Requests/${this.requestId}/feedback-qr`;
+                modal.style.display = 'block';
+            }
+
+            closeFeedbackModal() {
+                const modal = document.getElementById('feedbackModal');
+                modal.style.display = 'none';
             }
 
             async addComment() {
                 const text = document.getElementById('commentText').value.trim();
                 if (!text) return;
-
                 try {
                     await RequestsAPI.addComment(this.requestId, text, this.user.userId);
                     document.getElementById('commentText').value = '';
                     await this.loadComments();
                     NotificationManager.success('Комментарий добавлен');
-                } catch (e) {
-                    NotificationManager.error(e.message);
-                }
+                } catch (e) { NotificationManager.error(e.message); }
             }
 
-            edit() {
-                window.location.href = '/pages/edit-request.html?id=' + this.requestId;
-            }
-
-            assignMaster() {
-                window.location.href = '/pages/assign-master.html?id=' + this.requestId;
-            }
+            edit() { window.location.href = '/pages/edit-request.html?id=' + this.requestId; }
+            assignMaster() { window.location.href = '/pages/assign-master.html?id=' + this.requestId; }
 
             async deleteRequest() {
                 if (!confirm('Удалить заявку #' + this.requestId + '? Это действие нельзя отменить.')) return;
@@ -304,15 +307,12 @@
                     await RequestsAPI.delete(this.requestId);
                     NotificationManager.success('Заявка удалена');
                     window.location.href = '/pages/requests.html';
-                } catch (e) {
-                    NotificationManager.error(e.message);
-                }
+                } catch (e) { NotificationManager.error(e.message); }
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            window.page = new RequestDetailPage();
-        });
+        document.addEventListener('DOMContentLoaded', () => { window.page = new RequestDetailPage(); });
+        window.addComment = () => window.page.addComment();
     </script>
 </body>
 </html>

@@ -58,4 +58,19 @@ namespace ClimaticService.DTOs
         public string? Password { get; set; }
         public string Type { get; set; } = string.Empty;
     }
+
+    /// <summary>Запрос на продление срока выполнения заявки.</summary>
+    public class ExtendDeadlineDto
+    {
+        public int QualityManagerId { get; set; }
+        public DateTime NewPlannedCompletionDate { get; set; }
+        public string CustomerApprovalNote { get; set; } = string.Empty;
+    }
+
+    /// <summary>Запрос специалиста на помощь менеджера по качеству.</summary>
+    public class RequestQualityHelpDto
+    {
+        public int TechnicianId { get; set; }
+        public string ProblemDescription { get; set; } = string.Empty;
+    }
 }
