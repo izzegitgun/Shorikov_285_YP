@@ -87,7 +87,6 @@ namespace ClimaticService.Services
 
             await _context.SaveChangesAsync();
 
-            // Если статус изменился, уведомляем клиента
             if (oldStatusId != request.StatusId && request.ClientId > 0)
             {
                 var status = await _context.RequestStatuses.FindAsync(request.StatusId);
@@ -113,9 +112,9 @@ namespace ClimaticService.Services
             if (request == null) return null;
 
             request.MasterId = masterId;
-            if (request.StatusId == 1) // Если новая заявка, меняем статус на "В работе"
+            if (request.StatusId == 1) 
             {
-                request.StatusId = 2; // ID статуса "В процессе ремонта"
+                request.StatusId = 2;
             }
 
             await _context.SaveChangesAsync();
@@ -143,7 +142,6 @@ namespace ClimaticService.Services
 
             await _context.SaveChangesAsync();
 
-            // Уведомляем клиента
             var status = await _context.RequestStatuses.FindAsync(statusId);
             await NotifyClientAsync(requestId,
                 $"Статус вашей заявки #{requestId} изменен на '{status?.StatusName}'");
@@ -275,8 +273,6 @@ namespace ClimaticService.Services
 
                 _logger.LogInformation($"Уведомление для клиента {request.Client.Fio}: {message}");
 
-                // Здесь можно добавить отправку SMS или Email
-                // Пока просто сохраняем в лог
 
                 return true;
             }

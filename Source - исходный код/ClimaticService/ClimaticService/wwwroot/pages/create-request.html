@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaticService — новая заявка</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo" id="navLogo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" id="backBtn">← Назад</button>
+    </nav>
+
+    <main class="container" style="max-width: 600px;">
+        <div class="card slide-up">
+            <h1 class="mb-4">Новая заявка</h1>
+
+            <form id="createForm">
+                <!-- Номер заявки (только для менеджеров) -->
+                <div class="form-group" id="requestIdGroup" style="display: none;">
+                    <label class="form-label">Номер заявки</label>
+                    <input type="number" class="form-control" id="requestId" placeholder="Оставьте пустым для автоматической генерации">
+                    <small class="form-text">Если не указан, будет сгенерирован автоматически</small>
+                </div>
+
+                <!-- Дата добавления (только для менеджеров) -->
+                <div class="form-group" id="startDateGroup" style="display: none;">
+                    <label class="form-label">Дата добавления</label>
+                    <input type="datetime-local" class="form-control" id="startDate">
+                    <small class="form-text">По умолчанию - текущая дата и время</small>
+                </div>
+
+                <!-- Тип оборудования -->
+                <div class="form-group">
+                    <label class="form-label required">Тип оборудования</label>
+                    <select class="form-control" id="typeId" required>
+                        <option value="">Выберите тип…</option>
+                    </select>
+                </div>
+
+                <!-- Модель устройства -->
+                <div class="form-group">
+                    <label class="form-label required">Модель устройства</label>
+                    <input type="text" class="form-control" id="model" placeholder="Например: Samsung AC123" required>
+                </div>
+
+                <!-- Описание проблемы -->
+                <div class="form-group">
+                    <label class="form-label required">Описание проблемы</label>
+                    <textarea class="form-control" id="problemDescription" placeholder="Подробно опишите проблему…" rows="4" required></textarea>
+                </div>
+
+                <!-- ФИО заказчика -->
+                <div class="form-group">
+                    <label class="form-label required">ФИО заказчика</label>
+                    <input type="text" class="form-control" id="clientFio" placeholder="Иванов Иван Иванович" required>
+                </div>
+
+                <!-- Номер телефона -->
+                <div class="form-group">
+                    <label class="form-label required">Номер телефона</label>
+                    <input type="tel" class="form-control" id="clientPhone" placeholder="+7 (999) 123-45-67" required>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Создать заявку</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script>
+        const user = Auth.getCurrentUser();
+        const isManager = Auth.isManager();
+        const DRAFT_KEY = 'draftRequest';
+
+        // Настройка навигации
+        const goBack = () => window.location.href = user ? '/pages/menu.html' : '/';
+        document.getElementById('backBtn').onclick = goBack;
+        document.getElementById('cancelBtn').onclick = goBack;
+        document.getElementById('navLogo').href = user ? '/pages/menu.html' : '/';
+        document.getElementById('navLogo').onclick = (e) => { e.preventDefault(); goBack(); };
+
+        // Показываем дополнительные поля для менеджеров
+        if (isManager) {
+            document.getElementById('requestIdGroup').style.display = 'block';
+            document.getElementById('startDateGroup').style.display = 'block';
+
+            // Устанавливаем текущую дату и время по умолчанию для менеджеров
+            const now = new Date();
+            const localNow = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
+                .toISOString()
+                .slice(0, 16);
+            document.getElementById('startDate').value = localNow;
+        }
+
+        // Восстановление черновика после регистрации
+        let draftData = null;
+        const draftRaw = sessionStorage.getItem(DRAFT_KEY);
+        if (draftRaw) {
+            try {
+                draftData = JSON.parse(draftRaw);
+                sessionStorage.removeItem(DRAFT_KEY);
+                document.getElementById('model').value = draftData.model || '';
+                document.getElementById('problemDescription').value = draftData.problemDescription || '';
+                document.getElementById('clientFio').value = draftData.clientFio || '';
+                document.getElementById('clientPhone').value = draftData.clientPhone || '';
+                if (draftData.typeId) document.getElementById('typeId').value = draftData.typeId;
+            } catch (_) { }
+        } else if (user) {
+            // Для авторизованных пользователей подставляем их данные
+            document.getElementById('clientFio').value = user.fio || '';
+            document.getElementById('clientPhone').value = user.phone || '';
+        }
+
+        // Загрузка типов оборудования
+        RequestsAPI.getTypes().then(types => {
+            const select = document.getElementById('typeId');
+            types.forEach(type => {
+                select.innerHTML += `<option value="${type.typeId}">${type.typeName}</option>`;
+            });
+        }).catch(() => {
+            document.getElementById('typeId').innerHTML = '<option value="">ошибка загрузки</option>';
+        });
+
+        // Обработка отправки формы
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+
+            // Проверка авторизации
+            if (!user) {
+                // Сохраняем черновик для неавторизованного пользователя
+                sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+                    typeId: document.getElementById('typeId').value,
+                    model: document.getElementById('model').value,
+                    problemDescription: document.getElementById('problemDescription').value,
+                    clientFio: document.getElementById('clientFio').value,
+                    clientPhone: document.getElementById('clientPhone').value
+                }));
+                window.location.href = '/register.html?return=' + encodeURIComponent('/pages/create-request.html');
+                return;
+            }
+
+            try {
+                // Формируем данные заявки
+                const requestData = {
+                    typeId: parseInt(document.getElementById('typeId').value),
+                    model: document.getElementById('model').value,
+                    problemDescription: document.getElementById('problemDescription').value,
+                    clientId: user.userId,
+                    clientFio: document.getElementById('clientFio').value,
+                    clientPhone: document.getElementById('clientPhone').value
+                };
+
+                // Добавляем номер заявки если указан (только для менеджеров)
+                if (isManager) {
+                    const requestId = document.getElementById('requestId').value;
+                    if (requestId) {
+                        requestData.requestId = parseInt(requestId);
+                    }
+
+                    // Добавляем дату создания если указана
+                    const startDate = document.getElementById('startDate').value;
+                    if (startDate) {
+                        requestData.startDate = new Date(startDate).toISOString();
+                    }
+                }
+
+                // Создаем заявку
+                const request = await RequestsAPI.create(requestData);
+
+                NotificationManager.success('Заявка #' + request.requestId + ' создана');
+
+                // Перенаправляем на страницу заявки
+                setTimeout(() => window.location.href = '/pages/request-detail.html?id=' + request.requestId, 1000);
+
+            } catch (error) {
+                NotificationManager.error(error.message);
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById('createForm').addEventListener('submit', handleSubmit);
+
+        // Валидация телефона (простая)
+        document.getElementById('clientPhone').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value[0] === '7' || value[0] === '8') {
+                    value = value.substring(1);
+                }
+                if (value.length > 10) value = value.substring(0, 10);
+
+                let formatted = '+7';
+                if (value.length > 0) {
+                    formatted += ' (' + value.substring(0, 3);
+                }
+                if (value.length > 3) {
+                    formatted += ') ' + value.substring(3, 6);
+                }
+                if (value.length > 6) {
+                    formatted += '-' + value.substring(6, 8);
+                }
+                if (value.length > 8) {
+                    formatted += '-' + value.substring(8, 10);
+                }
+                e.target.value = formatted;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BtR3kNppo1s=",
+  "dgSpecHash": "+8qtTkA/qH4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\ClimaticService.csproj",
+  "projectFilePath": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\ClimaticService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Anton\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\Anton\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

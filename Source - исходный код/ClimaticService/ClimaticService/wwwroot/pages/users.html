@@ -55,6 +55,7 @@
         </div>
     </main>
 
+    <!-- Модальное окно редактирования (только для менеджеров) -->
     <div id="editModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
         <div class="modal">
             <div class="modal-header">
@@ -96,6 +97,7 @@
         </div>
     </div>
 
+    <!-- Модальное окно удаления (только для менеджеров) -->
     <div id="deleteModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
         <div class="modal">
             <div class="modal-header">
@@ -128,6 +130,7 @@
             let allUsers = [];
             let deleteTargetId = null;
 
+            // Загрузка списка
             async function loadUsers() {
                 try {
                     allUsers = await UsersAPI.getAll();
@@ -161,6 +164,7 @@
                 tbody.innerHTML = users.map(u => {
                     const registrationDate = u.registrationDate ? Formatter.date(u.registrationDate) : '—';
 
+                    // Для специалистов показываем только просмотр
                     if (isSpecialist) {
                         return `
                                 <tr>
@@ -176,6 +180,7 @@
                             `;
                     }
 
+                    // Для менеджеров показываем полное управление
                     return `
                             <tr>
                                 <td>${escapeHtml(u.fio)}</td>
@@ -199,6 +204,7 @@
                 return div.innerHTML;
             }
 
+            // Просмотр пользователя (для специалистов)
             window.viewUser = function (userId) {
                 const user = allUsers.find(u => u.userId === userId);
                 if (!user) return;

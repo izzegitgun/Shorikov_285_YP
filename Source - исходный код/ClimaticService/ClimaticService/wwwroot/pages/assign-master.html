@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaticService — назначить мастера</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/pages/menu.html" class="logo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="window.history.back()">← Назад</button>
+    </nav>
+
+    <main class="container" style="max-width: 480px;">
+        <div class="card slide-up">
+            <h1 class="mb-4">Назначить мастера</h1>
+            <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Заявка <strong id="requestIdLabel">#</strong></p>
+
+            <div class="form-group">
+                <label class="form-label">Специалист</label>
+                <select class="form-control" id="masterId">
+                    <option value="">Загрузка…</option>
+                </select>
+            </div>
+
+            <div class="flex gap-2 mt-4">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Отмена</button>
+                <button type="button" class="btn btn-primary" id="assignBtn">Назначить</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script>
+        const requestId = new URLSearchParams(window.location.search).get('id');
+        if (!requestId) {
+            NotificationManager.error('ID заявки не указан');
+            setTimeout(() => window.location.href = '/pages/requests.html', 1500);
+        }
+
+        document.getElementById('requestIdLabel').textContent = '#' + requestId;
+
+        fetch(API_BASE + '/Auth/masters')
+            .then(r => r.json())
+            .then(masters => {
+                const select = document.getElementById('masterId');
+                select.innerHTML = '<option value="">Выберите специалиста…</option>';
+                masters.forEach(m => {
+                    select.innerHTML += `<option value="${m.userId}">${m.fio} — ${m.phone || ''}</option>`;
+                });
+            })
+            .catch(() => {
+                document.getElementById('masterId').innerHTML = '<option value="">Ошибка загрузки</option>';
+            });
+
+        document.getElementById('assignBtn').onclick = async function() {
+            const masterId = document.getElementById('masterId').value;
+            if (!masterId) {
+                NotificationManager.warning('Выберите специалиста');
+                return;
+            }
+            this.disabled = true;
+            try {
+                await RequestsAPI.assignMaster(requestId, parseInt(masterId));
+                NotificationManager.success('Мастер назначен');
+                setTimeout(() => window.location.href = '/pages/request-detail.html?id=' + requestId, 1000);
+            } catch (e) {
+                NotificationManager.error(e.message);
+                this.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>

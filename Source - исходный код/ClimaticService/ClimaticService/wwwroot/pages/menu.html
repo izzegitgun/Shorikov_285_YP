@@ -22,10 +22,12 @@
     </nav>
 
     <main class="container">
+        <!-- Статистика только для менеджеров -->
         <div id="managerStats" style="display: none;">
             <div class="stats-grid" id="statsContainer"></div>
         </div>
 
+        <!-- Информация для клиентов -->
         <div id="clientInfo" class="card mb-4 slide-up" style="display: none;">
             <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
                 <div style="font-size: 3rem;">🌡️</div>
@@ -42,6 +44,7 @@
             <p style="color: var(--text-muted); margin: 0;">Выберите нужный раздел для работы</p>
         </div>
 
+        <!-- Динамическое меню в зависимости от роли -->
         <div class="menu-grid" id="menuContainer"></div>
     </main>
 
@@ -57,6 +60,7 @@
 
                 this.renderUserInfo();
 
+                // Показываем разные секции в зависимости от роли
                 if (this.user.type === 'Менеджер' || this.user.type === 'Менеджер по качеству') {
                     document.getElementById('managerStats').style.display = 'block';
                     await this.loadStatistics();
@@ -96,6 +100,7 @@
             static renderMenu() {
                 let menuItems = [];
 
+                // Меню для разных ролей
                 switch (this.user.type) {
                     case 'Заказчик':
                         menuItems = [
@@ -137,7 +142,7 @@
                 NotificationManager.info(
                     'ClimaticService - сервисный центр по ремонту климатической техники\n' +
                     '☎️ Телефон: +7 (999) 123-45-67\n' +
-                    '📍 Адрес: г. Екатеринбург, ул. Ленина, д. 123\n' +
+                    '📍 Адрес: г. Москва, ул. Примерная, д. 123\n' +
                     '⏰ Режим работы: Пн-Пт 9:00-20:00, Сб 10:00-18:00'
                 );
             }

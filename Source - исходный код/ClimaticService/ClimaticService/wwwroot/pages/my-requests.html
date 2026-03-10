@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaticService — мои заявки</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/pages/menu.html" class="logo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='/pages/menu.html'">← Назад</button>
+    </nav>
+
+    <main class="container">
+        <h1 class="mb-4">Мои заявки</h1>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>дата</th>
+                        <th>тип</th>
+                        <th>модель</th>
+                        <th>клиент</th>
+                        <th>статус</th>
+                        <th>мастер</th>
+                        <th>дней</th>
+                    </tr>
+                </thead>
+                <tbody id="requestsBody">
+                    <tr><td colspan="8" class="loading">Загрузка…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script>const user = Auth.getCurrentUser();
+
+        RequestsAPI.getClientRequests(user.userId).then(requests => {
+            if (requests.length === 0) {
+                document.getElementById('requestsBody').innerHTML =
+                    '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">У вас пока нет заявок</td></tr>';
+                return;
+            }
+
+            document.getElementById('requestsBody').innerHTML = requests
+                .map(req => RequestRenderer.renderTableRow(req, false))
+                .join('');
+        }).catch(error => {
+            NotificationManager.error('Ошибка загрузки');
+        });</script>
+</body>
+</html>

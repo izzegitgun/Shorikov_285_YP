@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaticService — статистика</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1.5rem 0;
+        }
+
+        .progress-bar-container {
+            background: var(--bg);
+            border-radius: 999px;
+            height: 24px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-bar {
+            background: var(--primary);
+            height: 100%;
+            color: white;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 0.3s ease;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .stat-row:last-child {
+                border-bottom: none;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/pages/menu.html" class="logo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='/pages/menu.html'">← Назад</button>
+    </nav>
+
+    <main class="container">
+        <h1 class="mb-4">Статистика и аналитика</h1>
+
+        <!-- Основные показатели -->
+        <div class="stats-grid mb-4" id="mainStats"></div>
+
+        <!-- График статусов -->
+        <div class="card mb-4">
+            <h3 class="section-title">Распределение по статусам</h3>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- График по типам оборудования -->
+        <div class="card mb-4">
+            <h3 class="section-title">Популярность типов оборудования</h3>
+            <div class="chart-container">
+                <canvas id="typeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Детальная статистика в виде прогресс-баров -->
+        <div class="card mb-4">
+            <h3 class="section-title">Детальная статистика по статусам</h3>
+            <div id="statusProgressBars"></div>
+        </div>
+
+        <!-- Статистика по типам -->
+        <div class="card">
+            <h3 class="section-title">Статистика по типам оборудования</h3>
+            <div id="typeStats"></div>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script>
+        let statusChart, typeChart;
+
+        async function loadStatistics() {
+            try {
+                const stats = await RequestsAPI.getStatistics();
+
+                // Основные показатели
+                document.getElementById('mainStats').innerHTML = [
+                    { icon: '📋', value: stats.totalRequests, label: 'всего заявок' },
+                    { icon: '✅', value: stats.completedRequests, label: 'завершено' },
+                    { icon: '⚙️', value: stats.inProgressRequests, label: 'в работе' },
+                    { icon: '🆕', value: stats.newRequests, label: 'новых' },
+                    { icon: '⏱️', value: stats.averageCompletionTimeDays, label: 'среднее время (дней)' }
+                ].map(item => `
+                        <div class="stat-card">
+                            <div class="stat-icon">${item.icon}</div>
+                            <div class="stat-value">${item.value}</div>
+                            <div class="stat-label">${item.label}</div>
+                        </div>
+                    `).join('');
+
+                // Прогресс-бары по статусам
+                const total = stats.totalRequests || 1;
+                document.getElementById('statusProgressBars').innerHTML = stats.statusStatistics.map(s => `
+                        <div class="stat-row">
+                            <span style="font-weight: 500;">${s.statusName}</span>
+                            <span style="color: var(--text-muted);">${s.count} (${Math.round(s.count / total * 100)}%)</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${s.count / total * 100}%;">
+                                ${s.count}
+                            </div>
+                        </div>
+                    `).join('');
+
+                // Статистика по типам
+                document.getElementById('typeStats').innerHTML = stats.faultTypeStatistics.map(t => `
+                        <div class="stat-row">
+                            <span style="font-weight: 500;">${t.typeName}</span>
+                            <span style="color: var(--text-muted);">${t.count} заявок</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${t.count / total * 100}%; background: var(--warning);">
+                                ${t.count}
+                            </div>
+                        </div>
+                    `).join('');
+
+                // Создаем графики
+                createCharts(stats);
+
+            } catch (error) {
+                NotificationManager.error('Ошибка загрузки статистики');
+            }
+        }
+
+        function createCharts(stats) {
+            // Уничтожаем старые графики если они есть
+            if (statusChart) statusChart.destroy();
+            if (typeChart) typeChart.destroy();
+
+            // График статусов
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: stats.statusStatistics.map(s => s.statusName),
+                    datasets: [{
+                        data: stats.statusStatistics.map(s => s.count),
+                        backgroundColor: [
+                            '#0d9488', // primary
+                            '#f59e0b', // warning
+                            '#ef4444', // danger
+                            '#10b981', // success
+                            '#6b7280'  // gray
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // График типов оборудования
+            const typeCtx = document.getElementById('typeChart').getContext('2d');
+            typeChart = new Chart(typeCtx, {
+                type: 'bar',
+                data: {
+                    labels: stats.faultTypeStatistics.map(t => t.typeName),
+                    datasets: [{
+                        label: 'Количество заявок',
+                        data: stats.faultTypeStatistics.map(t => t.count),
+                        backgroundColor: '#0d9488',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        loadStatistics();
+    </script>
+</body>
+</html>

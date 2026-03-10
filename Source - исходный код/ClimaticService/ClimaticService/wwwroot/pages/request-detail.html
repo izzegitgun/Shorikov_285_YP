@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка — ClimaticService</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/pages/menu.html" class="logo">
+            <span class="logo-icon">🌡️</span>
+            ClimaticService
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" id="backToListBtn">← К списку</button>
+    </nav>
+
+    <main class="container" style="max-width: 720px;">
+        <div id="loading" class="loading" style="display: none;">Загрузка…</div>
+
+        <div id="content" style="display: none;">
+            <div class="card mb-4 slide-up">
+                <div class="flex justify-between items-center">
+                    <h1 id="requestTitle">Заявка #</h1>
+                    <span class="status-badge" id="statusBadge"></span>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Дата создания</div>
+                        <div class="detail-value" id="startDate"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Тип оборудования</div>
+                        <div class="detail-value" id="equipmentType"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Модель</div>
+                        <div class="detail-value" id="model"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Клиент</div>
+                        <div class="detail-value" id="clientInfo"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Мастер</div>
+                        <div class="detail-value" id="masterInfo"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Дней в работе</div>
+                        <div class="detail-value" id="daysInWork"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="detail-label mb-2">Описание проблемы</div>
+                    <p class="detail-value" id="problemDescription" style="font-size:1rem; font-weight:400;"></p>
+                </div>
+
+                <div id="repairPartsSection" style="display: none;" class="mt-4">
+                    <div class="detail-label mb-2">Комплектующие</div>
+                    <p class="detail-value" id="repairParts" style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); font-weight: 400;"></p>
+                </div>
+            </div>
+
+            <!-- Блок быстрого изменения статуса для специалистов -->
+            <div id="quickStatusSection" class="card mb-4" style="display: none;">
+                <h3 class="section-title">Быстрое изменение статуса</h3>
+                <div class="flex gap-2">
+                    <button type="button" class="btn btn-secondary" onclick="window.page.changeStatus(2)">В работу</button>
+                    <button type="button" class="btn btn-warning" onclick="window.page.changeStatus(3)">Ожидание запчастей</button>
+                    <button type="button" class="btn btn-success" onclick="window.page.complete()">Завершить</button>
+                </div>
+            </div>
+
+            <!-- Блок редактирования комплектующих для специалистов -->
+            <div id="editPartsSection" class="card mb-4" style="display: none;">
+                <h3 class="section-title">Комплектующие</h3>
+                <textarea class="form-control" id="repairPartsEdit" rows="3" placeholder="Введите использованные запчасти..."></textarea>
+                <button type="button" class="btn btn-primary mt-2" onclick="window.page.updateRepairParts()">Сохранить комплектующие</button>
+            </div>
+
+            <div class="card">
+                <h3 class="section-title">Комментарии</h3>
+                <div id="commentsList" class="comments-section"></div>
+
+                <div id="addCommentSection" class="mt-4">
+                    <textarea class="form-control" id="commentText" placeholder="Добавить комментарий…" rows="3"></textarea>
+                    <button type="button" class="btn btn-primary btn-sm mt-2" onclick="window.page.addComment()">Отправить</button>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-4" id="actionButtons"></div>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/requests.js"></script>
+    <script>
+        class RequestDetailPage {
+            constructor() {
+                this.requestId = new URLSearchParams(window.location.search).get('id');
+                this.request = null;
+                this.user = Auth.getCurrentUser();
+                if (!this.requestId) {
+                    NotificationManager.error('ID заявки не указан');
+                    setTimeout(() => window.location.href = '/pages/requests.html', 1000);
+                    return;
+                }
+                this.init();
+            }
+
+            async init() {
+                await this.loadRequest();
+                await this.loadComments();
+            }
+
+            async loadRequest() {
+                try {
+                    this.request = await RequestsAPI.getById(this.requestId);
+                    this.renderRequest();
+                } catch (e) {
+                    NotificationManager.error('Ошибка загрузки заявки');
+                }
+            }
+
+            async loadComments() {
+                try {
+                    const comments = await RequestsAPI.getComments(this.requestId);
+                    this.renderComments(comments);
+                } catch (e) { console.error(e); }
+            }
+
+            renderRequest() {
+                const req = this.request;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+
+                const backBtn = document.getElementById('backToListBtn');
+                if (backBtn) backBtn.onclick = () => {
+                    if (this.user.type === 'Специалист') {
+                        window.location.href = '/pages/my-tasks.html';
+                    } else {
+                        window.location.href = '/pages/requests.html';
+                    }
+                };
+
+                document.getElementById('requestTitle').textContent = 'Заявка #' + req.requestId;
+                document.getElementById('startDate').textContent = Formatter.datetime(req.startDate);
+                document.getElementById('equipmentType').textContent = req.equipmentType?.typeName || '—';
+                document.getElementById('model').textContent = req.model;
+                document.getElementById('problemDescription').textContent = req.problemDescription;
+
+                const days = Math.ceil((new Date() - new Date(req.startDate)) / (1000 * 60 * 60 * 24));
+                document.getElementById('daysInWork').textContent = Formatter.days(days);
+
+                document.getElementById('clientInfo').innerHTML = (req.client?.fio || '—') + '<br><small style="color:var(--text-muted)">' + (Formatter.phone(req.client?.phone) || '') + '</small>';
+                document.getElementById('masterInfo').textContent = req.master?.fio || '—';
+
+                const statusBadge = document.getElementById('statusBadge');
+                statusBadge.textContent = req.status?.statusName || '—';
+                statusBadge.className = 'status-badge ' + RequestRenderer.getStatusClass(req.status?.statusName);
+
+                if (req.repairParts) {
+                    document.getElementById('repairPartsSection').style.display = 'block';
+                    document.getElementById('repairParts').textContent = req.repairParts;
+                    document.getElementById('repairPartsEdit').value = req.repairParts;
+                }
+
+                this.renderActionButtons();
+                this.renderSpecialistSections();
+            }
+
+            renderSpecialistSections() {
+                // Показываем дополнительные секции для специалистов, которым назначена заявка
+                if (this.user.type === 'Специалист' && this.request.masterId === this.user.userId) {
+                    if (this.request.statusId !== 4 && this.request.statusId !== 5) {
+                        document.getElementById('quickStatusSection').style.display = 'block';
+                        document.getElementById('editPartsSection').style.display = 'block';
+                    }
+                }
+                // Комментарии доступны всем
+                document.getElementById('addCommentSection').style.display = 'block';
+            }
+
+            renderComments(comments) {
+                const container = document.getElementById('commentsList');
+                if (!comments.length) {
+                    container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:1rem;">Комментариев пока нет</p>';
+                    return;
+                }
+                container.innerHTML = comments.map(c => `
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <span class="comment-author">${c.author?.fio || 'Специалист'}</span>
+                                <span class="comment-date">${c.createdAt ? Formatter.datetime(c.createdAt) : '—'}</span>
+                            </div>
+                            <div class="comment-text">${c.message}</div>
+                        </div>
+                    `).join('');
+            }
+
+            renderActionButtons() {
+                const container = document.getElementById('actionButtons');
+                let buttons = [];
+
+                // Кнопка редактирования для всех, у кого есть права
+                if (Auth.isManager() || this.user.userId === this.request.clientId ||
+                    (this.user.type === 'Специалист' && this.request.masterId === this.user.userId)) {
+                    buttons.push({
+                        text: 'Редактировать',
+                        action: () => this.edit(),
+                        class: 'btn-secondary'
+                    });
+                }
+
+                // Для менеджеров - назначение мастера
+                if (Auth.isManager() && !this.request.masterId) {
+                    buttons.push({
+                        text: 'Назначить мастера',
+                        action: () => this.assignMaster(),
+                        class: 'btn-primary'
+                    });
+                }
+
+                // Для менеджеров - удаление
+                if (Auth.isManager()) {
+                    buttons.push({
+                        text: 'Удалить заявку',
+                        action: () => this.deleteRequest(),
+                        class: 'btn-danger'
+                    });
+                }
+
+                container.innerHTML = buttons.map(b => `
+                        <button type="button" class="btn ${b.class}" onclick="window.page.${b.action.name}()">${b.text}</button>
+                    `).join('');
+            }
+
+            async changeStatus(statusId) {
+                try {
+                    await RequestsAPI.changeStatus(this.requestId, statusId);
+                    NotificationManager.success('Статус обновлён');
+                    await this.loadRequest();
+                } catch (e) {
+                    NotificationManager.error(e.message);
+                }
+            }
+
+            async complete() {
+                const parts = document.getElementById('repairPartsEdit').value;
+                try {
+                    await RequestsAPI.update(this.requestId, {
+                        statusId: 4,
+                        completionDate: new Date().toISOString(),
+                        repairParts: parts || null
+                    });
+                    NotificationManager.success('Заявка завершена');
+                    await this.loadRequest();
+                } catch (e) {
+                    NotificationManager.error(e.message);
+                }
+            }
+
+            async updateRepairParts() {
+                const parts = document.getElementById('repairPartsEdit').value;
+                try {
+                    await RequestsAPI.update(this.requestId, { repairParts: parts || null });
+                    NotificationManager.success('Комплектующие сохранены');
+                    await this.loadRequest();
+                } catch (e) {
+                    NotificationManager.error(e.message);
+                }
+            }
+
+            async addComment() {
+                const text = document.getElementById('commentText').value.trim();
+                if (!text) return;
+
+                try {
+                    await RequestsAPI.addComment(this.requestId, text, this.user.userId);
+                    document.getElementById('commentText').value = '';
+                    await this.loadComments();
+                    NotificationManager.success('Комментарий добавлен');
+                } catch (e) {
+                    NotificationManager.error(e.message);
+                }
+            }
+
+            edit() {
+                window.location.href = '/pages/edit-request.html?id=' + this.requestId;
+            }
+
+            assignMaster() {
+                window.location.href = '/pages/assign-master.html?id=' + this.requestId;
+            }
+
+            async deleteRequest() {
+                if (!confirm('Удалить заявку #' + this.requestId + '? Это действие нельзя отменить.')) return;
+                try {
+                    await RequestsAPI.delete(this.requestId);
+                    NotificationManager.success('Заявка удалена');
+                    window.location.href = '/pages/requests.html';
+                } catch (e) {
+                    NotificationManager.error(e.message);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.page = new RequestDetailPage();
+        });
+    </script>
+</body>
+</html>

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\ClimaticService.csproj": {}
+    "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\ClimaticService.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\ClimaticService.csproj": {
+    "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\ClimaticService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\ClimaticService.csproj",
+        "projectUniqueName": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\ClimaticService.csproj",
         "projectName": "ClimaticService",
-        "projectPath": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\ClimaticService.csproj",
+        "projectPath": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\ClimaticService.csproj",
         "packagesPath": "C:\\Users\\Anton\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Anton\\Desktop\\ClimaticService\\ClimaticService\\obj\\",
+        "outputPath": "C:\\Users\\Anton\\Desktop\\Shorikov_285_YP\\Source - исходный код\\ClimaticService\\ClimaticService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Anton\\AppData\\Roaming\\NuGet\\NuGet.Config",

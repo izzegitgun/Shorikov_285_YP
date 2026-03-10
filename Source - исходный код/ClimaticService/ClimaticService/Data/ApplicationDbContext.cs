@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ClimaticService.Models;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace ClimaticService.Data
 {
@@ -21,6 +20,29 @@ namespace ClimaticService.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+                v => v.ToUniversalTime(),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+            var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
+                v => v.HasValue ? v.Value.ToUniversalTime() : v,
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(dateTimeConverter);
+                    }
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetValueConverter(nullableDateTimeConverter);
+                    }
+                }
+            }
 
             modelBuilder.Entity<User>(entity =>
             {
@@ -47,6 +69,13 @@ namespace ClimaticService.Data
             {
                 entity.ToTable("requests");
                 entity.HasKey(e => e.RequestId);
+
+                // Указываем тип колонок для дат
+                entity.Property(e => e.StartDate)
+                    .HasColumnType("timestamp with time zone");
+
+                entity.Property(e => e.CompletionDate)
+                    .HasColumnType("timestamp with time zone");
 
                 entity.HasOne(e => e.EquipmentType)
                     .WithMany()
