@@ -2,16 +2,40 @@
 {% block title %}Нагрузка{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3 fade-in-up">
-    <h2 class="mb-0 fw-semibold"><i class="bi bi-journal-text me-2 text-primary"></i>Нагрузка</h2>
-    {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
-    <a href="{% url 'core:workload_create' %}" class="btn btn-primary btn-sm btn-soft">
-        <i class="bi bi-plus-lg me-1"></i>Добавить
-    </a>
-    {% endif %}
+    <div>
+        <p class="text-muted small mb-1">Учебная деятельность</p>
+        <h2 class="mb-0 fw-semibold"><i class="bi bi-journal-text me-2 text-primary"></i>Нагрузка</h2>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <form method="get" class="d-flex align-items-center gap-2">
+            <input type="hidden" name="year" value="{{ prev_year }}">
+            <input type="hidden" name="month" value="{{ prev_month }}">
+            <button type="submit" class="btn btn-outline-secondary btn-sm btn-soft" title="Предыдущий месяц">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+        </form>
+        <div class="text-center px-2">
+            <div class="small text-muted text-uppercase">Период</div>
+            <div class="fw-semibold">{{ current_month_label }} {{ current_year }}</div>
+        </div>
+        <form method="get" class="d-flex align-items-center gap-2">
+            <input type="hidden" name="year" value="{{ next_year }}">
+            <input type="hidden" name="month" value="{{ next_month }}">
+            <button type="submit" class="btn btn-outline-secondary btn-sm btn-soft" title="Следующий месяц">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </form>
+        {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
+        <a href="{% url 'core:workload_create' %}" class="btn btn-primary btn-sm btn-soft ms-2">
+            <i class="bi bi-plus-lg me-1"></i>Добавить
+        </a>
+        {% endif %}
+    </div>
 </div>
+
 <div class="card shadow-soft border-0 fade-in-up" data-delay="100">
     <div class="table-responsive">
-        <table class="table align-middle mb-0 table-modern">
+        <table class="table align-middle mb-0 table-modern table-hover">
             <thead class="table-light table-header-sticky">
             <tr>
                 <th>Дата</th>
@@ -26,34 +50,108 @@
             </thead>
             <tbody>
             {% for w in object_list %}
-                <tr>
-                    <td>{{ w.date }}</td>
+                <tr class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#workloadModal"
+                    data-date="{{ w.date|date:'d.m.Y' }}"
+                    data-pair="{{ w.get_pair_slot_display }}"
+                    data-group="{{ w.group.name }}"
+                    data-teacher="{{ w.teacher.full_name }}"
+                    data-subject="{{ w.subject.name }}"
+                    data-type="{{ w.get_activity_type_display }}"
+                    data-description="{{ w.description|default:'Нет описания' }}">
+                    <td>{{ w.date|date:"d.m.Y" }}</td>
                     <td>{{ w.get_pair_slot_display }}</td>
                     <td>{{ w.group.name }}</td>
                     <td>{{ w.teacher.full_name }}</td>
                     <td>{{ w.subject.name }}</td>
                     <td>{{ w.get_activity_type_display }}</td>
-                    <td>{{ w.description }}</td>
+                    <td class="text-truncate" style="max-width: 260px;">{{ w.description }}</td>
                     <td class="text-end">
                         {% if user.is_superuser or user.role == "curator" or user.role == "admin" %}
-                        <a href="{% url 'core:workload_edit' w.pk %}" class="btn btn-outline-primary btn-sm btn-soft">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                        <a href="{% url 'core:workload_delete' w.pk %}" class="btn btn-outline-danger btn-sm btn-soft">
-                            <i class="bi bi-trash3"></i>
-                        </a>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'core:workload_edit' w.pk %}" class="btn btn-outline-primary btn-soft" title="Редактировать" onclick="event.stopPropagation();">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="{% url 'core:workload_delete' w.pk %}" class="btn btn-outline-danger btn-soft" title="Удалить" onclick="event.stopPropagation();">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </div>
                         {% endif %}
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="7" class="text-center text-muted py-4">Нет данных</td>
+                    <td colspan="8" class="text-center text-muted py-4">Нет данных</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Модальное окно подробностей нагрузки -->
+<div class="modal fade" id="workloadModal" tabindex="-1" aria-labelledby="workloadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content glass-surface">
+      <div class="modal-header">
+        <h5 class="modal-title" id="workloadModalLabel"><i class="bi bi-journal-text me-2 text-primary"></i>Подробности нагрузки</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Дата</dt>
+          <dd class="col-sm-9" id="wl-date"></dd>
+
+          <dt class="col-sm-3">Пара</dt>
+          <dd class="col-sm-9" id="wl-pair"></dd>
+
+          <dt class="col-sm-3">Группа</dt>
+          <dd class="col-sm-9" id="wl-group"></dd>
+
+          <dt class="col-sm-3">Преподаватель</dt>
+          <dd class="col-sm-9" id="wl-teacher"></dd>
+
+          <dt class="col-sm-3">Предмет</dt>
+          <dd class="col-sm-9" id="wl-subject"></dd>
+
+          <dt class="col-sm-3">Тип занятия</dt>
+          <dd class="col-sm-9" id="wl-type"></dd>
+
+          <dt class="col-sm-3">Описание</dt>
+          <dd class="col-sm-9" id="wl-description"></dd>
+        </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.getElementById('workloadModal');
+  if (!modal) return;
+
+  modal.addEventListener('show.bs.modal', function (event) {
+    const row = event.relatedTarget;
+    if (!row) return;
+
+    document.getElementById('wl-date').textContent = row.getAttribute('data-date') || '';
+    document.getElementById('wl-pair').textContent = row.getAttribute('data-pair') || '';
+    document.getElementById('wl-group').textContent = row.getAttribute('data-group') || '';
+    document.getElementById('wl-teacher').textContent = row.getAttribute('data-teacher') || '';
+    document.getElementById('wl-subject').textContent = row.getAttribute('data-subject') || '';
+    document.getElementById('wl-type').textContent = row.getAttribute('data-type') || '';
+    document.getElementById('wl-description').textContent = row.getAttribute('data-description') || '';
+  });
+});
+</script>
+
+<style>
+.workload-filters-card {
+    border-radius: 1rem;
+}
+</style>
 {% endblock %}
 
 

@@ -3460,3 +3460,578 @@ django.core.exceptions.PermissionDenied
 [INFO] 2026-03-10 12:42:39,694 django.server: "GET /my/timesheets/ HTTP/1.1" 200 8787
 [INFO] 2026-03-10 12:42:40,736 django.server: "GET / HTTP/1.1" 200 14234
 [INFO] 2026-03-10 12:42:41,300 django.server: "GET /teachers/ HTTP/1.1" 200 15389
+[INFO] 2026-03-10 20:26:03,143 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:26:04,723 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:26:04,762 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6252
+[INFO] 2026-03-10 20:26:04,815 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:26:07,868 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:26:07,902 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:26:11,902 django.server: "GET /teachers/ HTTP/1.1" 200 15389
+[INFO] 2026-03-10 20:26:13,335 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:26:14,521 django.server: "GET /groups/ HTTP/1.1" 200 14781
+[INFO] 2026-03-10 20:26:16,342 django.server: "GET /workloads/ HTTP/1.1" 200 52910
+[INFO] 2026-03-10 20:26:17,148 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 64970
+[INFO] 2026-03-10 20:26:18,606 django.server: "GET /timesheets/ HTTP/1.1" 200 87211
+[INFO] 2026-03-10 20:26:30,167 django.server: "GET /auth/profile/ HTTP/1.1" 200 9633
+[INFO] 2026-03-10 20:26:33,358 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:26:37,290 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 10743
+[INFO] 2026-03-10 20:26:41,754 django.server: "POST /feedback/1/delete/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:26:41,766 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8872
+[INFO] 2026-03-10 20:26:42,556 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:43,464 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:43,642 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:44,549 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:44,572 django.server: "GET /static/css/style.css HTTP/1.1" 200 13157
+[INFO] 2026-03-10 20:26:44,577 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:26:44,923 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:26:44,923 django.server: "GET /favicon.ico HTTP/1.1" 404 9672
+[INFO] 2026-03-10 20:26:44,986 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:45,005 django.server: "GET /static/css/style.css HTTP/1.1" 200 13157
+[INFO] 2026-03-10 20:26:45,005 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 20:26:45,236 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:45,253 django.server: "GET /static/css/style.css HTTP/1.1" 200 13157
+[INFO] 2026-03-10 20:26:45,254 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 20:26:45,414 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8779
+[INFO] 2026-03-10 20:26:45,431 django.server: "GET /static/css/style.css HTTP/1.1" 200 13157
+[INFO] 2026-03-10 20:26:45,431 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:26:45,761 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:26:45,761 django.server: "GET /favicon.ico HTTP/1.1" 404 9672
+[INFO] 2026-03-10 20:26:48,005 django.server: "GET /accounts/logout/ HTTP/1.1" 200 9536
+[INFO] 2026-03-10 20:26:48,845 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:26:48,857 django.server: "GET /accounts/login/ HTTP/1.1" 200 6163
+[INFO] 2026-03-10 20:26:51,596 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:26:51,611 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:26:53,741 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 8962
+[INFO] 2026-03-10 20:27:35,072 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:27:40,518 django.server: "GET /subjects/1/edit/ HTTP/1.1" 200 11025
+[INFO] 2026-03-10 20:27:46,048 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:27:47,338 django.server: "GET /subjects/7/edit/ HTTP/1.1" 200 10041
+[INFO] 2026-03-10 20:27:48,697 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:27:55,295 django.server: "GET /teachers/ HTTP/1.1" 200 15389
+[INFO] 2026-03-10 20:27:56,481 django.server: "GET /teachers/3/ HTTP/1.1" 200 8848
+[INFO] 2026-03-10 20:28:00,271 django.server: "GET /groups/ HTTP/1.1" 200 14781
+[INFO] 2026-03-10 20:28:01,226 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:28:01,929 django.server: "GET /groups/ HTTP/1.1" 200 14781
+[INFO] 2026-03-10 20:28:02,594 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:28:03,162 django.server: "GET /teachers/ HTTP/1.1" 200 15389
+[INFO] 2026-03-10 20:28:03,770 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:28:04,925 django.server: "GET /timesheets/ HTTP/1.1" 200 87211
+[INFO] 2026-03-10 20:28:05,732 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:28:08,651 django.server: "GET /feedback/new/ HTTP/1.1" 200 10305
+[INFO] 2026-03-10 20:28:09,669 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:28:11,794 django.server: "GET /timesheets/ HTTP/1.1" 200 87211
+[INFO] 2026-03-10 20:28:18,653 django.server: "GET /timesheets/create/ HTTP/1.1" 200 18487
+[INFO] 2026-03-10 20:28:21,567 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:28:23,399 django.server: "GET /subjects/ HTTP/1.1" 200 16189
+[INFO] 2026-03-10 20:28:24,629 django.server: "GET /groups/ HTTP/1.1" 200 14781
+[INFO] 2026-03-10 20:28:25,494 django.server: "GET /workloads/ HTTP/1.1" 200 52910
+[INFO] 2026-03-10 20:28:26,204 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 64970
+[INFO] 2026-03-10 20:28:26,877 django.server: "GET /timesheets/ HTTP/1.1" 200 87211
+[INFO] 2026-03-10 20:28:41,030 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:31:57,044 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:32:00,879 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:32:08,482 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:32:16,514 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6252
+[INFO] 2026-03-10 20:32:16,514 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6252
+[INFO] 2026-03-10 20:32:20,487 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:32:20,511 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:32:23,928 django.server: "GET /timesheets/ HTTP/1.1" 200 104823
+[INFO] 2026-03-10 20:32:32,842 django.server: "GET /timesheets/20/pdf/ HTTP/1.1" 200 1794
+[INFO] 2026-03-10 20:32:40,003 django.server: "GET /timesheets/20/excel/ HTTP/1.1" 200 5189
+[INFO] 2026-03-10 20:33:16,598 django.utils.autoreload: C:\Users\Anton\Desktop\college_system_100\college_system\apps\core\views.py changed, reloading.
+[INFO] 2026-03-10 20:33:17,270 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:33:53,393 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:33:56,043 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:33:56,181 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6252
+[INFO] 2026-03-10 20:33:56,755 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6252
+[INFO] 2026-03-10 20:33:56,784 django.server: "GET /static/css/style.css HTTP/1.1" 200 13157
+[INFO] 2026-03-10 20:33:56,784 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:33:57,086 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:33:57,086 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:33:57,783 django.server: "POST /accounts/login/ HTTP/1.1" 200 6785
+[INFO] 2026-03-10 20:34:00,475 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:34:00,500 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:34:03,517 django.server: "GET /timesheets/ HTTP/1.1" 200 104823
+[INFO] 2026-03-10 20:34:05,172 django.server: "GET /timesheets/20/pdf/ HTTP/1.1" 200 1795
+[INFO] 2026-03-10 20:34:43,255 django.server: "GET /timesheets/2/ HTTP/1.1" 200 10637
+[INFO] 2026-03-10 20:34:46,758 django.server: "GET /timesheets/2/ HTTP/1.1" 200 10637
+[INFO] 2026-03-10 20:34:51,463 django.server: "GET /timesheets/2/excel/ HTTP/1.1" 200 5171
+[INFO] 2026-03-10 20:34:52,649 django.server: "GET /timesheets/2/pdf/ HTTP/1.1" 200 1784
+[INFO] 2026-03-10 20:36:07,611 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:36:11,233 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:36:11,301 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6252
+[INFO] 2026-03-10 20:36:13,834 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:36:13,858 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:36:15,092 django.server: "GET /timesheets/ HTTP/1.1" 200 104823
+[INFO] 2026-03-10 20:36:16,438 django.server: "GET /timesheets/20/pdf/ HTTP/1.1" 200 48494
+[INFO] 2026-03-10 20:36:24,223 django.server: "GET /timesheets/20/ HTTP/1.1" 200 10671
+[INFO] 2026-03-10 20:36:26,653 django.server: "GET /timesheets/13/ HTTP/1.1" 200 10677
+[INFO] 2026-03-10 20:36:30,218 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:36:31,839 django.server: "GET /groups/ HTTP/1.1" 200 14781
+[INFO] 2026-03-10 20:36:33,768 django.server: "GET / HTTP/1.1" 200 14234
+[INFO] 2026-03-10 20:38:40,124 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:38:42,062 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:38:43,363 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:38:43,389 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 20:38:43,389 django.server: "GET /static/css/style.css HTTP/1.1" 200 14031
+[WARNING] 2026-03-10 20:38:43,649 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:38:43,650 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:38:44,195 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:38:44,215 django.server: "GET /static/css/style.css HTTP/1.1" 200 14031
+[INFO] 2026-03-10 20:38:44,216 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 20:38:44,424 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:38:44,443 django.server: "GET /static/css/style.css HTTP/1.1" 200 14031
+[INFO] 2026-03-10 20:38:44,444 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:38:44,784 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:38:44,784 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:38:56,798 django.server: "GET /feedback/new/ HTTP/1.1" 200 12331
+[INFO] 2026-03-10 20:38:56,824 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:38:59,673 django.server: "GET /teachers/ HTTP/1.1" 200 17237
+[INFO] 2026-03-10 20:39:41,175 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:39:44,352 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:39:44,425 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6289
+[INFO] 2026-03-10 20:39:44,540 django.server: "GET /static/css/style.css HTTP/1.1" 200 13786
+[INFO] 2026-03-10 20:39:47,261 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:39:47,287 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:39:47,317 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:39:48,840 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:39:48,869 django.server: "GET /static/css/style.css HTTP/1.1" 200 13786
+[INFO] 2026-03-10 20:39:48,869 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:39:49,191 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:39:49,192 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:39:49,614 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:39:49,634 django.server: "GET /static/css/style.css HTTP/1.1" 200 13786
+[INFO] 2026-03-10 20:39:49,634 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:39:50,084 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:39:50,085 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:39:53,244 django.server: "GET /auth/users/ HTTP/1.1" 200 36968
+[INFO] 2026-03-10 20:39:53,276 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:39:54,384 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 66824
+[INFO] 2026-03-10 20:39:55,249 django.server: "GET /groups/ HTTP/1.1" 200 16629
+[INFO] 2026-03-10 20:39:55,278 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:39:55,733 django.server: "GET /workloads/ HTTP/1.1" 200 54758
+[INFO] 2026-03-10 20:39:56,186 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 66824
+[INFO] 2026-03-10 20:39:56,790 django.server: "GET /workloads/ HTTP/1.1" 200 54758
+[INFO] 2026-03-10 20:39:57,146 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 66824
+[INFO] 2026-03-10 20:39:57,448 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 66824
+[INFO] 2026-03-10 20:39:58,645 django.server: "GET /workloads/ HTTP/1.1" 200 54758
+[INFO] 2026-03-10 20:39:58,671 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:39:59,241 django.server: "GET /workloads/ HTTP/1.1" 200 54758
+[INFO] 2026-03-10 20:39:59,644 django.server: "GET /groups/ HTTP/1.1" 200 16629
+[INFO] 2026-03-10 20:40:00,067 django.server: "GET /subjects/ HTTP/1.1" 200 18037
+[INFO] 2026-03-10 20:40:00,451 django.server: "GET /teachers/ HTTP/1.1" 200 17237
+[INFO] 2026-03-10 20:40:01,913 django.server: "GET /salaries/ HTTP/1.1" 200 36622
+[INFO] 2026-03-10 20:40:01,940 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:40:02,519 django.server: "GET /timesheets/ HTTP/1.1" 200 106671
+[INFO] 2026-03-10 20:41:12,098 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:41:27,583 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:41:27,610 django.server: "GET /static/css/style.css HTTP/1.1" 200 14179
+[INFO] 2026-03-10 20:41:29,240 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:41:29,259 django.server: "GET /static/css/style.css HTTP/1.1" 200 14179
+[INFO] 2026-03-10 20:41:29,261 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:41:29,541 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:41:29,541 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:41:31,631 django.server: "GET /auth/users/ HTTP/1.1" 200 36968
+[INFO] 2026-03-10 20:41:35,509 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11378
+[INFO] 2026-03-10 20:41:35,538 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:41:36,695 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:41:36,762 django.server: "GET /accounts/login/ HTTP/1.1" 200 6200
+[INFO] 2026-03-10 20:41:38,969 django.server: "POST /accounts/login/ HTTP/1.1" 200 6619
+[INFO] 2026-03-10 20:41:44,991 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:41:45,019 django.server: "GET / HTTP/1.1" 200 20891
+[INFO] 2026-03-10 20:41:45,046 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:41:50,405 django.server: "GET /teachers/ HTTP/1.1" 200 15565
+[INFO] 2026-03-10 20:41:50,435 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:41:50,776 django.server: "GET /groups/ HTTP/1.1" 200 11168
+[INFO] 2026-03-10 20:41:51,368 django.server: "GET /subjects/ HTTP/1.1" 200 12125
+[INFO] 2026-03-10 20:41:52,795 django.server: "GET /timesheets/ HTTP/1.1" 200 105386
+[INFO] 2026-03-10 20:41:53,355 django.server: "GET /workloads/ HTTP/1.1" 200 35671
+[INFO] 2026-03-10 20:41:54,022 django.server: "GET /groups/ HTTP/1.1" 200 11168
+[INFO] 2026-03-10 20:41:54,724 django.server: "GET /subjects/ HTTP/1.1" 200 12125
+[INFO] 2026-03-10 20:41:55,298 django.server: "GET /teachers/ HTTP/1.1" 200 15565
+[INFO] 2026-03-10 20:41:55,324 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:41:57,054 django.server: "GET /teachers/2/ HTTP/1.1" 200 9046
+[INFO] 2026-03-10 20:41:58,001 django.server: "GET /subjects/ HTTP/1.1" 200 12125
+[INFO] 2026-03-10 20:41:59,224 django.server: "GET /groups/ HTTP/1.1" 200 11168
+[INFO] 2026-03-10 20:42:00,677 django.server: "GET /workloads/ HTTP/1.1" 200 35671
+[INFO] 2026-03-10 20:42:03,332 django.server: "GET /timesheets/ HTTP/1.1" 200 105386
+[INFO] 2026-03-10 20:42:03,356 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:42:04,852 django.server: "GET /timesheets/create/ HTTP/1.1" 200 19050
+[INFO] 2026-03-10 20:42:06,624 django.server: "GET /timesheets/ HTTP/1.1" 200 105386
+[INFO] 2026-03-10 20:42:07,132 django.server: "GET /salaries/ HTTP/1.1" 200 35337
+[INFO] 2026-03-10 20:42:09,850 django.server: "GET /salaries/create/ HTTP/1.1" 200 12731
+[INFO] 2026-03-10 20:42:14,543 django.server: "GET /feedback/new/ HTTP/1.1" 200 11294
+[INFO] 2026-03-10 20:42:14,573 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:42:17,104 django.server: "GET /accounts/logout/ HTTP/1.1" 200 10093
+[INFO] 2026-03-10 20:42:17,991 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:42:18,413 django.server: "GET /accounts/login/ HTTP/1.1" 200 6200
+[INFO] 2026-03-10 20:42:20,614 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:42:20,694 django.server: "GET / HTTP/1.1" 200 16076
+[INFO] 2026-03-10 20:42:24,096 django.server: "GET /auth/users/ HTTP/1.1" 200 36968
+[INFO] 2026-03-10 20:42:24,130 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:43:20,773 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:43:23,143 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:43:23,391 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6308
+[INFO] 2026-03-10 20:43:23,447 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:43:25,950 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:43:26,038 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:43:32,057 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11397
+[INFO] 2026-03-10 20:43:33,110 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:43:33,310 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 10766
+[INFO] 2026-03-10 20:43:35,395 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11397
+[INFO] 2026-03-10 20:43:36,497 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:43:37,107 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 20:43:39,935 django.server: "POST /accounts/login/ HTTP/1.1" 200 6638
+[INFO] 2026-03-10 20:43:39,962 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:43:44,098 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:43:44,187 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-10 20:43:49,914 django.server: "GET /accounts/logout/ HTTP/1.1" 200 10112
+[INFO] 2026-03-10 20:43:50,862 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:43:51,430 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 20:43:53,748 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:43:53,841 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:43:55,379 django.server: "GET /auth/users/ HTTP/1.1" 200 36987
+[INFO] 2026-03-10 20:43:55,412 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:44:01,978 django.server: "POST /auth/users/2/delete/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:44:01,995 django.server: "GET /auth/users/ HTTP/1.1" 200 35703
+[INFO] 2026-03-10 20:44:14,347 django.server: "POST /auth/users/3/delete/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:44:14,363 django.server: "GET /auth/users/ HTTP/1.1" 200 34423
+[INFO] 2026-03-10 20:44:14,395 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:44:16,395 django.server: "GET /auth/users/20/edit/ HTTP/1.1" 200 13200
+[INFO] 2026-03-10 20:44:21,521 django.server: "GET /auth/users/ HTTP/1.1" 200 34423
+[INFO] 2026-03-10 20:44:23,967 django.server: "GET /chat/ HTTP/1.1" 200 19743
+[INFO] 2026-03-10 20:44:24,742 django.server: "GET /chat/?contact=18 HTTP/1.1" 200 19729
+[INFO] 2026-03-10 20:44:25,228 django.server: "GET /chat/?contact=20 HTTP/1.1" 200 19728
+[INFO] 2026-03-10 20:44:25,711 django.server: "GET /chat/?contact=5 HTTP/1.1" 200 19727
+[INFO] 2026-03-10 20:44:26,052 django.server: "GET /chat/?contact=10 HTTP/1.1" 200 19724
+[INFO] 2026-03-10 20:44:26,399 django.server: "GET /chat/?contact=12 HTTP/1.1" 200 19724
+[INFO] 2026-03-10 20:44:27,897 django.server: "GET /chat/?contact=7 HTTP/1.1" 200 19728
+[INFO] 2026-03-10 20:45:56,481 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:45:58,435 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:45:58,843 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6308
+[INFO] 2026-03-10 20:45:58,889 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:46:01,473 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:46:01,617 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:46:02,673 django.server: "GET /chat/ HTTP/1.1" 200 33426
+[INFO] 2026-03-10 20:46:05,526 django.server: "GET /chat/ HTTP/1.1" 200 33426
+[INFO] 2026-03-10 20:46:05,555 django.server: "GET /static/css/style.css HTTP/1.1" 200 14179
+[INFO] 2026-03-10 20:46:05,556 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 20:46:05,981 django.server: "GET /chat/ HTTP/1.1" 200 33426
+[INFO] 2026-03-10 20:46:05,999 django.server: "GET /static/css/style.css HTTP/1.1" 200 14179
+[INFO] 2026-03-10 20:46:06,000 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:46:06,230 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:46:06,231 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:46:07,161 django.server: "GET /chat/ HTTP/1.1" 200 33426
+[INFO] 2026-03-10 20:46:07,183 django.server: "GET /static/css/style.css HTTP/1.1" 200 14179
+[INFO] 2026-03-10 20:46:07,183 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:46:07,494 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:46:07,494 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:46:09,457 django.server: "GET /chat/?contact=13 HTTP/1.1" 200 33407
+[INFO] 2026-03-10 20:46:11,049 django.server: "GET /chat/?contact=12 HTTP/1.1" 200 33407
+[INFO] 2026-03-10 20:46:17,754 django.server: "GET /chat/?contact=10 HTTP/1.1" 200 33407
+[INFO] 2026-03-10 20:46:18,167 django.server: "GET /chat/?contact=20 HTTP/1.1" 200 33411
+[INFO] 2026-03-10 20:46:30,975 django.server: "GET /chat/?contact=7 HTTP/1.1" 200 33411
+[INFO] 2026-03-10 20:46:37,560 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11397
+[INFO] 2026-03-10 20:46:38,572 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:46:40,111 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 20:46:40,139 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:46:43,486 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:46:43,852 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-10 20:47:08,848 django.server: "GET /salaries/ HTTP/1.1" 200 35356
+[INFO] 2026-03-10 20:48:00,174 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:48:01,907 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-10 20:48:01,944 django.server: "GET /static/css/style.css HTTP/1.1" 200 14199
+[INFO] 2026-03-10 20:48:03,728 django.server: "GET /timesheets/ HTTP/1.1" 200 105405
+[INFO] 2026-03-10 20:48:03,763 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:48:04,825 django.server: "GET /workloads/ HTTP/1.1" 200 35690
+[INFO] 2026-03-10 20:48:04,853 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:49:04,095 django.server: "GET /groups/ HTTP/1.1" 200 11187
+[INFO] 2026-03-10 20:49:04,131 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:49:04,886 django.server: "GET /timesheets/ HTTP/1.1" 200 105405
+[INFO] 2026-03-10 20:49:05,420 django.server: "GET /workloads/ HTTP/1.1" 200 35690
+[INFO] 2026-03-10 20:49:05,807 django.server: "GET /groups/ HTTP/1.1" 200 11187
+[INFO] 2026-03-10 20:49:07,316 django.server: "GET /subjects/ HTTP/1.1" 200 12144
+[INFO] 2026-03-10 20:49:07,854 django.server: "GET /teachers/ HTTP/1.1" 200 15584
+[INFO] 2026-03-10 20:49:08,503 django.server: "GET /groups/ HTTP/1.1" 200 11187
+[INFO] 2026-03-10 20:49:09,120 django.server: "GET /workloads/ HTTP/1.1" 200 35690
+[INFO] 2026-03-10 20:49:09,757 django.server: "GET /timesheets/ HTTP/1.1" 200 105405
+[INFO] 2026-03-10 20:49:10,672 django.server: "GET /feedback/new/ HTTP/1.1" 200 11313
+[INFO] 2026-03-10 20:49:12,000 django.server: "GET /salaries/ HTTP/1.1" 200 35356
+[INFO] 2026-03-10 20:49:12,028 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:49:12,727 django.server: "GET /timesheets/ HTTP/1.1" 200 105405
+[INFO] 2026-03-10 20:49:13,842 django.server: "GET /salaries/ HTTP/1.1" 200 35356
+[INFO] 2026-03-10 20:49:17,834 django.server: "GET /my/timesheets/ HTTP/1.1" 200 9363
+[INFO] 2026-03-10 20:49:19,802 django.server: "GET /my/salaries/ HTTP/1.1" 200 9279
+[INFO] 2026-03-10 20:49:20,593 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-10 20:49:20,618 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:49:31,645 django.utils.autoreload: C:\Users\Anton\Desktop\college_system_100\college_system\apps\core\views.py changed, reloading.
+[INFO] 2026-03-10 20:49:32,407 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:50:23,972 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:50:26,983 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-10 20:50:27,024 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:50:29,903 django.server: "GET /workloads/ HTTP/1.1" 200 72362
+[INFO] 2026-03-10 20:50:49,507 django.server: "GET /workloads/?month=6&year=2026&subject=2&teacher=12&activity_type= HTTP/1.1" 200 18841
+[INFO] 2026-03-10 20:50:49,538 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:50:50,716 django.server: "GET /workloads/ HTTP/1.1" 200 72362
+[INFO] 2026-03-10 20:51:01,833 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type=lecture HTTP/1.1" 200 19017
+[INFO] 2026-03-10 20:51:04,013 django.server: "GET /workloads/?month=&year=2026&subject=2&teacher=12&activity_type=lab HTTP/1.1" 200 18841
+[INFO] 2026-03-10 20:51:05,818 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type=practice HTTP/1.1" 200 19017
+[INFO] 2026-03-10 20:51:07,346 django.server: "GET /workloads/?month=&year=2026&subject=2&teacher=12&activity_type=lecture HTTP/1.1" 200 18841
+[INFO] 2026-03-10 20:51:07,382 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:51:08,536 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type= HTTP/1.1" 200 19009
+[INFO] 2026-03-10 20:51:10,035 django.server: "GET /workloads/ HTTP/1.1" 200 72362
+[INFO] 2026-03-10 20:51:13,634 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type= HTTP/1.1" 200 19009
+[INFO] 2026-03-10 20:51:16,225 django.server: "GET /workloads/ HTTP/1.1" 200 72362
+[INFO] 2026-03-10 20:52:49,932 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:53:05,043 django.server: "GET /workloads/ HTTP/1.1" 200 71711
+[INFO] 2026-03-10 20:53:05,075 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 20:53:05,075 django.server: "GET /static/css/style.css HTTP/1.1" 200 14199
+[WARNING] 2026-03-10 20:53:05,408 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:53:05,409 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:53:05,991 django.server: "GET /workloads/ HTTP/1.1" 200 71711
+[INFO] 2026-03-10 20:53:06,016 django.server: "GET /static/css/style.css HTTP/1.1" 200 14199
+[INFO] 2026-03-10 20:53:06,016 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:53:06,241 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:53:06,241 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:53:11,022 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-10 20:53:13,363 django.server: "GET /workloads/?month=2&year=2026&subject=2&teacher=12&activity_type= HTTP/1.1" 200 19308
+[INFO] 2026-03-10 20:53:14,576 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type= HTTP/1.1" 200 19476
+[INFO] 2026-03-10 20:53:15,440 django.server: "GET /workloads/?month=1&year=2026&subject=2&teacher=12&activity_type= HTTP/1.1" 200 19308
+[INFO] 2026-03-10 20:53:17,016 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type= HTTP/1.1" 200 19476
+[INFO] 2026-03-10 20:53:19,212 django.server: "GET /workloads/?month=&year=2025&subject=2&teacher=12&activity_type= HTTP/1.1" 200 19300
+[INFO] 2026-03-10 20:53:21,284 django.server: "GET /workloads/ HTTP/1.1" 200 71711
+[INFO] 2026-03-10 20:53:26,767 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=12&activity_type= HTTP/1.1" 200 19388
+[INFO] 2026-03-10 20:53:29,301 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type= HTTP/1.1" 200 19476
+[INFO] 2026-03-10 20:53:30,519 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=12&activity_type= HTTP/1.1" 200 19388
+[INFO] 2026-03-10 20:53:35,589 django.server: "GET /workloads/ HTTP/1.1" 200 71711
+[INFO] 2026-03-10 20:53:49,570 django.server: "GET /workloads/ HTTP/1.1" 200 71711
+[INFO] 2026-03-10 20:53:49,605 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:53:49,865 django.server: "GET /timesheets/ HTTP/1.1" 200 105405
+[INFO] 2026-03-10 20:53:51,604 django.server: "GET /groups/ HTTP/1.1" 200 11187
+[INFO] 2026-03-10 20:53:52,440 django.server: "GET /workloads/ HTTP/1.1" 200 71711
+[INFO] 2026-03-10 20:53:53,954 django.server: "GET /accounts/logout/ HTTP/1.1" 200 10112
+[INFO] 2026-03-10 20:54:01,912 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:54:03,401 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 20:54:05,533 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:54:05,696 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:54:06,961 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 66843
+[INFO] 2026-03-10 20:54:07,917 django.server: "GET /workloads/ HTTP/1.1" 200 100704
+[INFO] 2026-03-10 20:54:08,636 django.server: "GET /workloads/create/ HTTP/1.1" 200 14878
+[INFO] 2026-03-10 20:54:10,228 django.server: "GET /workloads/ HTTP/1.1" 200 100704
+[INFO] 2026-03-10 20:54:11,581 django.server: "GET /workloads/create/ HTTP/1.1" 200 14878
+[INFO] 2026-03-10 20:54:20,650 django.server: "POST /workloads/create/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 20:54:21,996 django.server: "GET /workloads/ HTTP/1.1" 200 102358
+[INFO] 2026-03-10 20:54:22,280 django.server: "GET /workloads/29/edit/ HTTP/1.1" 200 14997
+[INFO] 2026-03-10 20:54:24,051 django.server: "GET /workloads/ HTTP/1.1" 200 102358
+[INFO] 2026-03-10 20:54:27,667 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=12&activity_type= HTTP/1.1" 200 20836
+[INFO] 2026-03-10 20:54:27,701 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:54:29,111 django.server: "GET /workloads/?month=&year=2026&subject=&teacher=&activity_type= HTTP/1.1" 200 22425
+[INFO] 2026-03-10 20:54:30,097 django.server: "GET /workloads/ HTTP/1.1" 200 102358
+[INFO] 2026-03-10 20:54:31,242 django.server: "GET /workloads/?month=&year=2026&subject=4&teacher=12&activity_type= HTTP/1.1" 200 20748
+[INFO] 2026-03-10 20:54:37,932 django.server: "GET /workloads/ HTTP/1.1" 200 102358
+[INFO] 2026-03-10 20:55:49,082 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:55:50,660 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:55:50,699 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:55:51,779 django.server: "GET /workloads/ HTTP/1.1" 200 102354
+[INFO] 2026-03-10 20:55:53,276 django.server: "GET /workloads/ HTTP/1.1" 200 102354
+[INFO] 2026-03-10 20:55:53,305 django.server: "GET /static/css/style.css HTTP/1.1" 200 14199
+[INFO] 2026-03-10 20:55:53,305 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[WARNING] 2026-03-10 20:55:53,645 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 20:55:53,645 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 20:55:55,878 django.server: "GET /workloads/?month=&year=&subject=&teacher=12&activity_type= HTTP/1.1" 200 29928
+[INFO] 2026-03-10 20:55:57,623 django.server: "GET /workloads/?month=&year=&subject=&teacher=&activity_type= HTTP/1.1" 200 102354
+[INFO] 2026-03-10 20:56:02,374 django.server: "GET /workloads/?month=&year=&subject=&teacher=12&activity_type= HTTP/1.1" 200 29928
+[INFO] 2026-03-10 20:56:05,580 django.server: "GET /workloads/?month=&year=&subject=4&teacher=&activity_type= HTTP/1.1" 200 26478
+[INFO] 2026-03-10 20:56:06,514 django.server: "GET /workloads/?month=&year=&subject=5&teacher=12&activity_type= HTTP/1.1" 200 22362
+[INFO] 2026-03-10 20:56:07,717 django.server: "GET /workloads/?month=&year=&subject=3&teacher=&activity_type= HTTP/1.1" 200 22430
+[INFO] 2026-03-10 20:56:10,050 django.server: "GET /workloads/?month=&year=&subject=&teacher=&activity_type= HTTP/1.1" 200 102354
+[INFO] 2026-03-10 20:56:12,048 django.server: "GET /workloads/ HTTP/1.1" 200 102354
+[INFO] 2026-03-10 20:56:13,359 django.server: "GET /workloads/?month=&year=&subject=4&teacher=12&activity_type= HTTP/1.1" 200 20744
+[INFO] 2026-03-10 20:56:14,284 django.server: "GET /workloads/?month=&year=&subject=1&teacher=&activity_type= HTTP/1.1" 200 24126
+[INFO] 2026-03-10 20:56:15,684 django.server: "GET /workloads/?month=&year=&subject=10&teacher=12&activity_type= HTTP/1.1" 200 22410
+[INFO] 2026-03-10 20:56:20,417 django.server: "GET /workloads/?month=&year=&subject=4&teacher=&activity_type= HTTP/1.1" 200 26478
+[INFO] 2026-03-10 20:56:21,234 django.server: "GET /workloads/?month=&year=&subject=4&teacher=12&activity_type= HTTP/1.1" 200 20744
+[INFO] 2026-03-10 20:56:23,831 django.server: "GET /workloads/?month=&year=&subject=10&teacher=&activity_type= HTTP/1.1" 200 31919
+[INFO] 2026-03-10 20:56:25,798 django.server: "GET /workloads/ HTTP/1.1" 200 102354
+[INFO] 2026-03-10 20:57:55,821 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-10 20:57:58,946 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 20:57:58,983 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 20:58:00,050 django.server: "GET /workloads/ HTTP/1.1" 200 16036
+[INFO] 2026-03-10 20:58:02,213 django.server: "GET /workloads/?year=2026&month=2 HTTP/1.1" 200 14541
+[INFO] 2026-03-10 20:58:03,185 django.server: "GET /workloads/?year=2026&month=1 HTTP/1.1" 200 14540
+[INFO] 2026-03-10 20:58:03,736 django.server: "GET /workloads/?year=2025&month=12 HTTP/1.1" 200 49828
+[INFO] 2026-03-10 20:58:08,062 django.server: "GET /workloads/?year=2026&month=1 HTTP/1.1" 200 14540
+[INFO] 2026-03-10 20:58:09,006 django.server: "GET /workloads/?year=2026&month=2 HTTP/1.1" 200 14541
+[INFO] 2026-03-10 20:58:09,960 django.server: "GET /workloads/?year=2026&month=3 HTTP/1.1" 200 16036
+[INFO] 2026-03-10 21:00:25,132 django.server: "GET /workloads/ HTTP/1.1" 200 16036
+[INFO] 2026-03-10 21:00:25,165 django.server: "GET /static/js/theme-toggle.js HTTP/1.1" 200 1504
+[INFO] 2026-03-10 21:00:25,165 django.server: "GET /static/css/style.css HTTP/1.1" 200 14199
+[WARNING] 2026-03-10 21:00:25,418 django.request: Not Found: /favicon.ico
+[WARNING] 2026-03-10 21:00:25,419 django.server: "GET /favicon.ico HTTP/1.1" 404 10073
+[INFO] 2026-03-10 21:00:26,552 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 68383
+[INFO] 2026-03-10 21:00:27,880 django.server: "GET /auth/users/ HTTP/1.1" 200 34423
+[INFO] 2026-03-10 21:00:28,808 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 10835
+[INFO] 2026-03-10 21:00:29,404 django.server: "GET /chat/ HTTP/1.1" 200 33426
+[INFO] 2026-03-10 21:00:33,265 django.server: "GET /chat/?contact=5 HTTP/1.1" 200 33410
+[INFO] 2026-03-10 21:00:35,269 django.server: "GET /chat/?contact=12 HTTP/1.1" 200 33407
+[INFO] 2026-03-10 21:00:38,653 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 10652
+[INFO] 2026-03-10 21:00:40,697 django.server: "GET /salaries/ HTTP/1.1" 200 36641
+[INFO] 2026-03-10 21:00:43,509 django.server: "GET /chat/ HTTP/1.1" 200 33426
+[INFO] 2026-03-10 21:00:44,131 django.server: "GET /feedback/inbox/ HTTP/1.1" 200 10652
+[INFO] 2026-03-10 21:00:45,455 django.server: "GET /workloads/ HTTP/1.1" 200 16036
+[INFO] 2026-03-10 21:00:46,041 django.server: "GET /groups/ HTTP/1.1" 200 16648
+[INFO] 2026-03-10 21:00:46,756 django.server: "GET /subjects/ HTTP/1.1" 200 18056
+[INFO] 2026-03-10 21:00:52,984 django.server: "GET /subjects/4/edit/ HTTP/1.1" 200 11959
+[INFO] 2026-03-10 21:00:55,258 django.server: "POST /subjects/4/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:00:55,284 django.server: "GET /subjects/ HTTP/1.1" 200 18058
+[INFO] 2026-03-10 21:00:56,788 django.server: "GET /subjects/5/edit/ HTTP/1.1" 200 11891
+[INFO] 2026-03-10 21:00:58,307 django.server: "POST /subjects/5/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:00:58,328 django.server: "GET /subjects/ HTTP/1.1" 200 18059
+[INFO] 2026-03-10 21:01:03,331 django.server: "GET /subjects/6/edit/ HTTP/1.1" 200 11933
+[INFO] 2026-03-10 21:01:05,311 django.server: "POST /subjects/6/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:01:05,332 django.server: "GET /subjects/ HTTP/1.1" 200 18061
+[INFO] 2026-03-10 21:01:06,636 django.server: "GET /subjects/7/edit/ HTTP/1.1" 200 11908
+[INFO] 2026-03-10 21:01:08,585 django.server: "POST /subjects/7/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:01:08,617 django.server: "GET /subjects/ HTTP/1.1" 200 18062
+[INFO] 2026-03-10 21:01:09,951 django.server: "GET /subjects/8/edit/ HTTP/1.1" 200 11925
+[INFO] 2026-03-10 21:01:11,873 django.server: "POST /subjects/8/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:01:11,889 django.server: "GET /subjects/ HTTP/1.1" 200 18064
+[INFO] 2026-03-10 21:01:13,519 django.server: "GET /subjects/9/edit/ HTTP/1.1" 200 11903
+[INFO] 2026-03-10 21:01:14,938 django.server: "POST /subjects/9/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:01:14,953 django.server: "GET /subjects/ HTTP/1.1" 200 18065
+[INFO] 2026-03-10 21:01:16,455 django.server: "GET /subjects/10/edit/ HTTP/1.1" 200 11919
+[INFO] 2026-03-10 21:01:18,165 django.server: "POST /subjects/10/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:01:18,180 django.server: "GET /subjects/ HTTP/1.1" 200 18066
+[INFO] 2026-03-10 21:01:19,318 django.server: "GET /subjects/11/edit/ HTTP/1.1" 200 11932
+[INFO] 2026-03-10 21:01:20,868 django.server: "POST /subjects/11/edit/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:01:20,883 django.server: "GET /subjects/ HTTP/1.1" 200 18068
+[INFO] 2026-03-10 21:01:25,237 django.server: "GET /groups/ HTTP/1.1" 200 16648
+[INFO] 2026-03-10 21:01:25,760 django.server: "GET /teachers/ HTTP/1.1" 200 17256
+[INFO] 2026-03-10 21:01:27,507 django.server: "GET /subjects/ HTTP/1.1" 200 18068
+[INFO] 2026-03-10 21:01:27,824 django.server: "GET /groups/ HTTP/1.1" 200 16648
+[INFO] 2026-03-10 21:01:28,327 django.server: "GET /workloads/ HTTP/1.1" 200 16036
+[INFO] 2026-03-10 21:01:28,935 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 68383
+[INFO] 2026-03-10 21:01:35,573 django.server: "GET /salaries/ HTTP/1.1" 200 36641
+[INFO] 2026-03-10 21:01:35,856 django.server: "GET /timesheets/ HTTP/1.1" 200 106690
+[INFO] 2026-03-10 21:01:36,478 django.server: "GET /salaries/ HTTP/1.1" 200 36641
+[INFO] 2026-03-10 21:01:37,169 django.server: "GET /timesheets/ HTTP/1.1" 200 106690
+[INFO] 2026-03-10 21:01:43,193 django.server: "GET /timesheets/8/ HTTP/1.1" 200 12526
+[INFO] 2026-03-10 21:01:43,236 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-10 21:02:14,955 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11397
+[INFO] 2026-03-10 21:02:16,930 django.server: "GET /accounts/email/ HTTP/1.1" 200 12696
+[INFO] 2026-03-10 21:02:21,451 django.server: "POST /accounts/email/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:02:21,468 django.server: "GET /accounts/email/ HTTP/1.1" 200 12703
+[INFO] 2026-03-10 21:02:24,947 django.server: "GET /accounts/email/ HTTP/1.1" 200 12703
+[ERROR] 2026-03-10 21:02:29,238 django.request: Internal Server Error: /accounts/email/
+Traceback (most recent call last):
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\decorators.py", line 12, in wrap
+    resp = function(request, *args, **kwargs)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\views.py", line 374, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\views.py", line 391, in post
+    res = self._action_send(request)
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\views.py", line 420, in _action_send
+    send_email_confirmation(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        self.request, request.user, email=email_address.email
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\utils.py", line 353, in send_email_confirmation
+    email_address.send_confirmation(request, signup=signup)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\models.py", line 101, in send_confirmation
+    confirmation.send(request, signup=signup)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\models.py", line 134, in send
+    get_adapter().send_confirmation_mail(request, self, signup)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\adapter.py", line 625, in send_confirmation_mail
+    self.send_mail(email_template, emailconfirmation.email_address.email, ctx)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\allauth\account\adapter.py", line 207, in send_mail
+    msg.send()
+    ~~~~~~~~^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\message.py", line 299, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 127, in send_messages
+    new_conn_created = self.open()
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\mail\backends\smtp.py", line 85, in open
+    self.connection = self.connection_class(
+                      ~~~~~~~~~~~~~~~~~~~~~^
+        self.host, self.port, **connection_params
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 341, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\smtplib.py", line 312, in _get_socket
+    return socket.create_connection((host, port), timeout,
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+                                    self.source_address)
+                                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 864, in create_connection
+    raise exceptions[0]
+  File "C:\Users\Anton\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 849, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение
+[ERROR] 2026-03-10 21:02:29,245 django.server: "POST /accounts/email/ HTTP/1.1" 500 170201
+[INFO] 2026-03-10 21:02:31,265 django.server: "GET /accounts/email/ HTTP/1.1" 200 12703
+[INFO] 2026-03-10 21:02:35,694 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11397
+[INFO] 2026-03-10 21:02:36,626 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:02:36,676 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 21:02:39,638 django.server: "GET /accounts/password/reset/ HTTP/1.1" 200 6369
+[INFO] 2026-03-10 21:02:41,478 django.server: "POST /accounts/password/reset/ HTTP/1.1" 200 6778
+[INFO] 2026-03-10 21:02:43,796 django.server: "GET /accounts/password/reset/ HTTP/1.1" 200 6369
+[INFO] 2026-03-10 21:02:45,276 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 21:02:49,220 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:02:49,271 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-10 21:02:52,990 django.server: "GET /accounts/logout/ HTTP/1.1" 200 11397
+[INFO] 2026-03-10 21:02:54,513 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:02:54,598 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-10 21:02:55,835 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-10 21:02:55,948 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6308
+[INFO] 2026-03-11 20:19:25,313 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-11 20:19:32,139 django.server: "GET / HTTP/1.1" 302 0
+[INFO] 2026-03-11 20:19:32,195 django.server: "GET /accounts/login/?next=/ HTTP/1.1" 200 6308
+[INFO] 2026-03-11 20:19:32,254 django.server: "GET /static/css/style.css HTTP/1.1" 200 14199
+[INFO] 2026-03-11 20:19:34,504 django.server: "GET /accounts/password/reset/ HTTP/1.1" 200 6369
+[INFO] 2026-03-11 20:21:03,903 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-11 20:21:07,590 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-11 20:21:07,623 django.server: "GET / HTTP/1.1" 200 20910
+[INFO] 2026-03-11 20:21:09,432 django.server: "GET /accounts/password/change/ HTTP/1.1" 200 12147
+[INFO] 2026-03-11 20:22:23,393 django.server: "GET /timesheets/ HTTP/1.1" 200 105405
+[INFO] 2026-03-11 20:22:24,058 django.server: "GET /workloads/ HTTP/1.1" 200 13942
+[INFO] 2026-03-11 20:22:26,186 django.server: "GET /accounts/logout/ HTTP/1.1" 200 10112
+[INFO] 2026-03-11 20:22:27,726 django.server: "POST /accounts/logout/ HTTP/1.1" 302 0
+[INFO] 2026-03-11 20:22:27,738 django.server: "GET /accounts/login/ HTTP/1.1" 200 6219
+[INFO] 2026-03-11 20:22:29,861 django.server: "POST /accounts/login/ HTTP/1.1" 302 0
+[INFO] 2026-03-11 20:22:29,884 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-11 20:22:32,897 django.server: "GET /auth/users/ HTTP/1.1" 200 34423
+[INFO] 2026-03-11 20:22:38,686 django.server: "GET /auth/users/7/edit/ HTTP/1.1" 200 13222
+[INFO] 2026-03-11 20:43:19,977 django.utils.autoreload: Watching for file changes with StatReloader
+[INFO] 2026-03-11 20:43:24,046 django.server: "GET / HTTP/1.1" 200 16095
+[INFO] 2026-03-11 20:43:24,084 django.server: "GET /static/css/style.css HTTP/1.1" 304 0
+[INFO] 2026-03-11 20:43:27,751 django.server: "GET /workloads/calendar/ HTTP/1.1" 200 68383

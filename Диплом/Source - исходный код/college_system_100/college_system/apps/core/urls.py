@@ -32,9 +32,11 @@ urlpatterns = [
     # Timesheets
     path("timesheets/", views.TimesheetListView.as_view(), name="timesheet_list"),
     path("timesheets/create/", views.TimesheetCreateView.as_view(), name="timesheet_create"),
+    path("timesheets/<int:pk>/", views.TimesheetDetailView.as_view(), name="timesheet_detail"),
     path("timesheets/<int:pk>/edit/", views.TimesheetUpdateView.as_view(), name="timesheet_edit"),
     path("timesheets/<int:pk>/delete/", views.TimesheetDeleteView.as_view(), name="timesheet_delete"),
     path("timesheets/<int:pk>/pdf/", views.TimesheetPDFView.as_view(), name="timesheet_pdf"),
+    path("timesheets/<int:pk>/excel/", views.TimesheetExcelView.as_view(), name="timesheet_excel"),
     # Salary
     path("salaries/", views.SalaryListView.as_view(), name="salary_list"),
     path("salaries/create/", views.SalaryCreateView.as_view(), name="salary_create"),

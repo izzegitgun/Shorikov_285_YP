@@ -1,9 +1,11 @@
 import io
+import os
 import calendar
 from collections import defaultdict
 from datetime import date, timedelta
 
 import pandas as pd
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q, Sum
@@ -22,6 +24,8 @@ from django.views.generic import (
 from openpyxl import Workbook
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 from apps.authentication.models import User
 from .forms import (
@@ -277,12 +281,79 @@ class WorkloadListView(LoginRequiredMixin, RoleRequiredMixin, ListView):
     def get_queryset(self):
         qs = super().get_queryset().select_related("teacher", "subject", "group")
         user = self.request.user
+
+        # Ограничение для преподавателя: только его собственная нагрузка
         if user.role == "teacher":
             teacher_profile = getattr(user, "teacher_profile", None)
             if teacher_profile:
-                return qs.filter(teacher=teacher_profile)
-            return qs.none()
-        return qs
+                qs = qs.filter(teacher=teacher_profile)
+            else:
+                return Workload.objects.none()
+
+        # Просмотр по месяцам: берём месяц/год из query params или текущие
+        today = date.today()
+        try:
+            month = int(self.request.GET.get("month", today.month))
+        except (TypeError, ValueError):
+            month = today.month
+        try:
+            year = int(self.request.GET.get("year", today.year))
+        except (TypeError, ValueError):
+            year = today.year
+
+        month = min(max(month, 1), 12)
+
+        qs = qs.filter(date__year=year, date__month=month)
+
+        return qs.order_by("date", "pair_slot")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        today = date.today()
+
+        try:
+            month = int(self.request.GET.get("month", today.month))
+        except (TypeError, ValueError):
+            month = today.month
+        try:
+            year = int(self.request.GET.get("year", today.year))
+        except (TypeError, ValueError):
+            year = today.year
+
+        month = min(max(month, 1), 12)
+        current = date(year, month, 1)
+        prev_month_date = (current.replace(day=1) - timedelta(days=1)).replace(day=1)
+        next_month_date = (current.replace(day=28) + timedelta(days=4)).replace(day=1)
+
+        months = [
+            (1, "Январь"),
+            (2, "Февраль"),
+            (3, "Март"),
+            (4, "Апрель"),
+            (5, "Май"),
+            (6, "Июнь"),
+            (7, "Июль"),
+            (8, "Август"),
+            (9, "Сентябрь"),
+            (10, "Октябрь"),
+            (11, "Ноябрь"),
+            (12, "Декабрь"),
+        ]
+        month_label = dict(months).get(month, "")
+
+        ctx.update(
+            {
+                "current_month": month,
+                "current_year": year,
+                "current_month_label": month_label,
+                "prev_month": prev_month_date.month,
+                "prev_year": prev_month_date.year,
+                "next_month": next_month_date.month,
+                "next_year": next_month_date.year,
+            }
+        )
+
+        return ctx
 
 
 class WorkloadCalendarView(LoginRequiredMixin, RoleRequiredMixin, TemplateView):
@@ -443,6 +514,22 @@ class TimesheetDeleteView(LoginRequiredMixin, RoleRequiredMixin, DeleteView):
     allowed_roles = ["curator", "admin", "accountant"]
 
 
+class TimesheetDetailView(LoginRequiredMixin, RoleRequiredMixin, DetailView):
+    model = Timesheet
+    template_name = "core/timesheet_detail.html"
+    allowed_roles = ["curator", "admin", "accountant", "teacher"]
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related("teacher", "subject", "group")
+        user = self.request.user
+        if user.role == "teacher":
+            teacher_profile = getattr(user, "teacher_profile", None)
+            if teacher_profile:
+                return qs.filter(teacher=teacher_profile)
+            return qs.none()
+        return qs
+
+
 class TimesheetPDFView(LoginRequiredMixin, RoleRequiredMixin, View):
     allowed_roles = ["curator", "admin", "accountant", "teacher"]
 
@@ -454,6 +541,23 @@ class TimesheetPDFView(LoginRequiredMixin, RoleRequiredMixin, View):
                 return HttpResponse(status=403)
         buffer = io.BytesIO()
         pdf = canvas.Canvas(buffer, pagesize=A4)
+
+        # Попытка подключить шрифт с поддержкой кириллицы
+        font_name = "Helvetica"
+        font_candidates = [
+            os.path.join(getattr(settings, "BASE_DIR", ""), "static", "fonts", "DejaVuSans.ttf"),
+            r"C:\Windows\Fonts\arial.ttf",
+        ]
+        for path in font_candidates:
+            if os.path.exists(path):
+                try:
+                    pdfmetrics.registerFont(TTFont("CustomCyrillic", path))
+                    font_name = "CustomCyrillic"
+                    break
+                except Exception:
+                    continue
+
+        pdf.setFont(font_name, 12)
         pdf.setTitle("Табель рабочего времени")
         pdf.drawString(50, 800, f"Табель рабочего времени: {timesheet.teacher.full_name}")
         pdf.drawString(50, 780, f"Дисциплина: {timesheet.subject.name if timesheet.subject else 'Не указана'}")
@@ -473,6 +577,67 @@ class TimesheetPDFView(LoginRequiredMixin, RoleRequiredMixin, View):
         pdf.save()
         buffer.seek(0)
         return FileResponse(buffer, as_attachment=True, filename="timesheet.pdf")
+
+
+class TimesheetExcelView(LoginRequiredMixin, RoleRequiredMixin, View):
+    allowed_roles = ["curator", "admin", "accountant", "teacher"]
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        timesheet = get_object_or_404(Timesheet, pk=pk)
+        if request.user.role == "teacher":
+            teacher_profile = getattr(request.user, "teacher_profile", None)
+            if not teacher_profile or timesheet.teacher != teacher_profile:
+                return HttpResponse(status=403)
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Табель"
+
+        ws.append(
+            [
+                "Преподаватель",
+                "Дисциплина",
+                "Группа",
+                "Период",
+                "Лекции (часы)",
+                "Практика (часы)",
+                "Лабораторные (часы)",
+                "Итого (часы)",
+                "Статус",
+            ]
+        )
+
+        if timesheet.period_from and timesheet.period_to:
+            period_display = f"{timesheet.period_from:%d.%m.%Y} - {timesheet.period_to:%d.%m.%Y}"
+        elif getattr(timesheet, "period", None):
+            period_display = timesheet.period.strftime("%m.%Y")
+        else:
+            period_display = "Не указан"
+
+        ws.append(
+            [
+                timesheet.teacher.full_name if timesheet.teacher else "",
+                timesheet.subject.name if timesheet.subject else "",
+                timesheet.group.name if timesheet.group else "",
+                period_display,
+                float(timesheet.lecture_hours or 0),
+                float(timesheet.practice_hours or 0),
+                float(timesheet.lab_hours or 0),
+                float(timesheet.total_hours or 0),
+                timesheet.get_status_display(),
+            ]
+        )
+
+        stream = io.BytesIO()
+        wb.save(stream)
+        stream.seek(0)
+
+        response = HttpResponse(
+            stream.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response["Content-Disposition"] = f'attachment; filename="timesheet_{timesheet.pk}.xlsx"'
+        return response
 
 
 class SalaryListView(LoginRequiredMixin, RoleRequiredMixin, ListView):

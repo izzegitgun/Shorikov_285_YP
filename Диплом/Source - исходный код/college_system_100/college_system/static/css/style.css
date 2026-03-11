@@ -148,6 +148,45 @@ h2 {
     transform: scaleX(1);
 }
 
+/* Основные ссылки навигации — компактные "пилюли" с горизонтальным скроллом при переполнении */
+
+.nav-main-links {
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+.nav-link-pill {
+    border-radius: 999px;
+    padding-inline: 0.9rem;
+    padding-block: 0.3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    background: transparent;
+    box-shadow: 0 0 0 rgba(15, 23, 42, 0);
+}
+
+.nav-link-pill.active {
+    background: rgba(15, 23, 42, 0.96);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.55);
+    border-color: rgba(59, 130, 246, 0.9);
+}
+
+[data-bs-theme="light"] .nav-link-pill.active {
+    background: rgba(248, 250, 252, 0.98);
+    color: #020617 !important;
+}
+
+.nav-link-pill:hover {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(148, 163, 184, 0.9);
+}
+
+[data-bs-theme="light"] .nav-link-pill:hover {
+    background: rgba(248, 250, 252, 0.92);
+}
+
 .navbar-text {
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -378,7 +417,8 @@ h2 {
 }
 
 [data-bs-theme="light"] .table-elevated tbody tr {
-    background-color: #020617;
+    background-color: #ffffff;
+    color: #0f172a;
 }
 
 .table-elevated tbody tr td:first-child {

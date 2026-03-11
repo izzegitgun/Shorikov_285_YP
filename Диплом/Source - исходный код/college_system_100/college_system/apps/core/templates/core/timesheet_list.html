@@ -54,7 +54,11 @@
                 <tbody>
                 {% for t in object_list %}
                     <tr>
-                        <td>{{ t.teacher.full_name }}</td>
+                        <td>
+                            <a href="{% url 'core:timesheet_detail' t.pk %}" class="text-decoration-none">
+                                {{ t.teacher.full_name }}
+                            </a>
+                        </td>
                         <td>{% if t.subject %}{{ t.subject.name }}{% else %}—{% endif %}</td>
                         <td>{% if t.group %}{{ t.group.name }}{% else %}—{% endif %}</td>
                         <td>{% if t.period_from %}{{ t.period_from|date:"d.m.Y" }}{% else %}—{% endif %}</td>
@@ -75,6 +79,9 @@
                         <td class="text-end">
                             <a href="{% url 'core:timesheet_pdf' t.pk %}" class="btn btn-outline-secondary btn-sm btn-soft" title="PDF">
                                 <i class="bi bi-filetype-pdf"></i>
+                            </a>
+                            <a href="{% url 'core:timesheet_excel' t.pk %}" class="btn btn-outline-success btn-sm btn-soft" title="Excel">
+                                <i class="bi bi-file-earmark-spreadsheet"></i>
                             </a>
                             {% if user.is_superuser or user.role == "curator" or user.role == "admin" or user.role == "accountant" %}
                             <a href="{% url 'core:timesheet_edit' t.pk %}" class="btn btn-outline-primary btn-sm btn-soft" title="Редактировать">
